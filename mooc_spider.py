@@ -39,7 +39,7 @@ if __name__ == '__main__':
         "categoryId": "1001043131",
         "type": "30",
         "orderBy": "0",
-        "pageIndex": "1",
+        "pageIndex": "15",
         "pageSize": "20"
     }
     html_content = get_page_html(URL, cookie, data)
