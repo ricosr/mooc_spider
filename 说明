@@ -1,0 +1,17 @@
+1) Introduction
+网站实现跨平台搜索课程及评价功能。
+(2) Problem statement and background knowledge
+问题：因为当前课程的平台很多，用户找课程及评价不方便。设计这个网站主要解决用户搜索需求的课程，减少用户搜索课程评价的时间。
+(3) Objective and expected outcome
+用最快的速度给到用户所需要的课程以及评价。
+(4) Methodology
+爬虫scrapy,beautifulsoap，检索whoosh，前端html+js+css, flask,
+语言 python
++图
+(5)  Schedule
+     三期
+第一期：爬数据
+
+第二期：搜索展示
+
+第三期：排名分类
