@@ -12,8 +12,10 @@ headers= {"User-Agent" : "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9
          "cookie": cookie
 }
 
-data = {'courseId': '1003535158', 'pageIndex': '1', 'pageSize': '20', 'orderBy': '3'}
+data = {'courseId': '93001', 'pageIndex': '1', 'pageSize': '20', 'orderBy': '3'}
 
 response = requests.post(url, data, headers=headers)
+
+# page count: "totlePageCount":35
 
 print(response.text)
