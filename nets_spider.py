@@ -50,6 +50,11 @@ def save_comment():
     pass
 
 
+def save_data(json_data, path):
+    with open(path, 'w', encoding='utf-8') as fpr:
+        fpr.write(json_data)
+
+
 if __name__ == '__main__':
     # URL = "https://study.163.com/dwr/call/plaincall/CourseBean.getMixCourseCardDto.dwr?1551060448677"
     URL = "https://study.163.com/p/search/studycourse.json"
@@ -70,21 +75,22 @@ if __name__ == '__main__':
     #     "c0-param0": "Object_Object:{size:reference:c0-e1,index:reference:c0-e2,frontCategoryId:reference:c0-e3,timeType:reference:c0-e4,orderBy:reference:c0-e5}",
     #     "batchId": "1551060448577"
     # }
-    data = {"pageIndex": "1",
-            "pageSize": "50",
-            "relativeOffset": "0",
-            "frontCategoryId": "480000003121007",
-            "searchTimeType": "-1",
-            "orderType": "50",
-            "priceType": "-1",
-            "activityId": "0",
-            "advertiseSearchUuid": "634252e4-ac1b-46e9-9912-9362bf1a2340",
-            "keyword": ""
-            }
+    for i in range(1, 4):
+        data = {
+                    "pageIndex": "{}".format(i),
+                    "pageSize": 50,
+                    "relativeOffset": 0,
+                    "keyword": "python",
+                    "searchTimeType": -1,
+                    "orderType": 50,
+                    "priceType": -1,
+                    "activityId": 0,
+                    "qualityType": 0
+                }
 
-    html_content = get_page_html(URL, cookie, data)
-    print(html_content)
-    with open("log.txt", 'a', encoding='utf-8') as fw:
-        fw.write(html_content)
+        json_content = get_page_html(URL, cookie, data)
+        save_data(json_content, "net_data/net_url/python_page_{}.json".format(i))
+    # with open("log.txt", 'a', encoding='utf-8') as fw:
+    #     fw.write(html_content)
     # if "7028" in html_content:
     #     print("done!")
