@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# crawl lecture list for a kind of lecture
+
 import json
 
 import requests
@@ -21,18 +23,6 @@ def do_post(url, cookie, data):
         return response.text
     except Exception as e:
         print(e)
-
-#
-# def get_lectures_urls(html):
-#     pass
-#
-#
-# def get_comment_content():
-#     pass
-#
-#
-# def save_comment():
-#     pass
 
 
 def judge_null(json_data):
