@@ -22,17 +22,17 @@ def do_post(url, cookie, data):
     except Exception as e:
         print(e)
 
-
-def get_lectures_urls(html):
-    pass
-
-
-def get_comment_content():
-    pass
-
-
-def save_comment():
-    pass
+#
+# def get_lectures_urls(html):
+#     pass
+#
+#
+# def get_comment_content():
+#     pass
+#
+#
+# def save_comment():
+#     pass
 
 
 def judge_null(json_data):
@@ -44,7 +44,6 @@ def judge_null(json_data):
 def save_data(json_data, path):
     with open(path, 'w', encoding='utf-8') as fpr:
         fpr.write(json_data)
-
 
 
 def get_lec_ids(lec_type_no):
