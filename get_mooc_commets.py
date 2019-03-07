@@ -4,6 +4,7 @@
 
 import pickle
 import json
+import threading
 
 import requests
 from parse_mooc_lec_json import Teacher, Lecture
@@ -53,11 +54,35 @@ def request_lec_comments(courseId):
     save_comment_json(courseId, COMMENT_JSON, json_str)
 
 
+def mul_thread_crawl(threading_num, block_ls):
+    def download_fun(course_id_ls):
+        for course_id in course_id_ls:
+            request_lec_comments(course_id)
+    thread_ls = []
+    for i in range(threading_num):
+        thread_ls.append(threading.Thread(target=download_fun, args=(block_ls[i],)))
+    for i in range(threading_num):
+        thread_ls[i].start()
+
+
 def test():
     global LECTURE_DATA
     lec_id_ls = read_lec_data(LECTURE_DATA)
-    for lec_id in lec_id_ls:
-        request_lec_comments(lec_id)
+    if len(lec_id_ls) > 3:
+        block_size = len(lec_id_ls) // 3
+        block_ls = []
+
+        start_index = 0
+        for i in range(3):
+            block_ls.append(lec_id_ls[start_index:start_index+block_size])
+            start_index = start_index + block_size
+        if start_index < len(lec_id_ls):
+            block_ls.append(lec_id_ls[start_index:])
+        threading_num = len(block_ls)
+        mul_thread_crawl(threading_num, block_ls)
+    else:
+        for lec_id in lec_id_ls:
+            request_lec_comments(lec_id)
 
 test()
 
