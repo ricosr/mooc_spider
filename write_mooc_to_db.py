@@ -23,9 +23,14 @@ def handle_db(comment_ls):
 
 
 def read_db():
-    pass
+    db_opt = connect_db()
+    collections_names = db_opt.collection_names()
+    collections_names.remove('system.indexes')
+    for collection in collections_names:
+        print(next(db_opt[collection].find()))
 
 
 if __name__ == '__main__':
-    comment_ls = read_comments_info(COMMENTS_DATA)
-    handle_db(comment_ls)
+    # comment_ls = read_comments_info(COMMENTS_DATA)
+    # handle_db(comment_ls)
+    read_db()
