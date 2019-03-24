@@ -8,6 +8,7 @@ import os
 
 
 LECTURE_DATA = "mooc_data/lectures_data.pkl"
+LECTURE_JSON = "mooc_data/mooc_url"
 
 
 class Teacher:
@@ -40,9 +41,8 @@ def read_json_file(json_path):   # return a dictionary result object
     return dict_data["result"]["result"]
 
 
-def save_lecture_data(lec_info):
-    global LECTURE_DATA
-    with open(LECTURE_DATA, 'wb') as fpw:
+def save_lecture_data(lec_info, lecture_data_path):
+    with open(lecture_data_path, 'wb') as fpw:
         pickle.dump(lec_info, fpw)
 
 
@@ -67,20 +67,19 @@ def get_lec_info(result_obj):
     return lec_info_dict
 
 
-def handle_mooc_lecture(json_path):
+def handle_mooc_lecture(json_path, lecture_data_path):
     all_lec_dict = {}
     for file_name in os.listdir(json_path):
         each_file_path = os.path.join(json_path, file_name)
         result_obj = read_json_file(each_file_path)
         temp_lec_info = get_lec_info(result_obj)
         all_lec_dict.update(temp_lec_info)
-    save_lecture_data(all_lec_dict)
+    save_lecture_data(all_lec_dict, lecture_data_path)
 
 
-def read_lecture_info():
+def read_lecture_info(lecture_data_path):
     lectures_ls = []
-    global LECTURE_DATA
-    with open(LECTURE_DATA, "rb") as pwf:
+    with open(lecture_data_path, "rb") as pwf:
         content = pickle.load(pwf)
     for lec_id, each_lec in content.items():
         tmp_lec_dict = {}
@@ -90,16 +89,16 @@ def read_lecture_info():
         tmp_lec_dict["school_short_name"] = each_lec.school_short_name
         tmp_lec_dict["moc_tag_dtos"] = each_lec.moc_tag_dtos
         tmp_lec_dict["img_url"] = each_lec.img_url
-        tmp_teacher_ls = []
+        tmp_teacher_dict = {}
         for teacher in each_lec.teacher_info:
-            tmp_teacher_ls.append(teacher.real_name)
-            tmp_teacher_ls.append(teacher.lector_title)
-        tmp_lec_dict["teachers"] = tmp_teacher_ls
+            if teacher.real_name:
+                tmp_teacher_dict[teacher.real_name] = teacher.lector_title
+        tmp_lec_dict["teachers"] = tmp_teacher_dict
         lectures_ls.append(tmp_lec_dict)
     return lectures_ls
 
 
 
-# handle_mooc_lecture("mooc_data/mooc_url")
+# handle_mooc_lecture(LECTURE_JSON)
 # temp = read_lecture_info()
 # print(temp)
