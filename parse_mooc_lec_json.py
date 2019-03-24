@@ -17,12 +17,13 @@ class Teacher:
 
 
 class Lecture:
-    def __init__(self, lec_id, lec_name, school_name, school_short_name, moc_tag_dtos):
+    def __init__(self, lec_id, lec_name, school_name, school_short_name, moc_tag_dtos, img_url):
         self.lec_id = lec_id
         self.lec_name = lec_name
         self.school_name = school_name
         self.school_short_name = school_short_name
         self.moc_tag_dtos = moc_tag_dtos
+        self.img_url = img_url
         self.teacher_info = []
 
     def get_teachers_info(self, teacher_ls):
@@ -50,6 +51,7 @@ def get_lec_info(result_obj):
     for each_obj in result_obj:
         lec_id = each_obj["id"]
         lec_name = each_obj["name"]
+        img_url = each_obj["imgUrl"]
         school_name = each_obj["schoolPanel"]["name"]
         school_short_name = each_obj["schoolPanel"]["shortName"]
         moc_tag_dtos = ''
@@ -59,10 +61,9 @@ def get_lec_info(result_obj):
                 moc_tag_dtos += tmp_moc["name"] + ','
             if "comment" in tmp_moc:
                 moc_tag_dtos += tmp_moc["comment"]
-        lecture_obj = Lecture(lec_id, lec_name, school_name, school_short_name, moc_tag_dtos)
+        lecture_obj = Lecture(lec_id, lec_name, school_name, school_short_name, moc_tag_dtos, img_url)
         lecture_obj.get_teachers_info(each_obj["termPanel"]["lectorPanels"])
         lec_info_dict[lec_id] = lecture_obj
-        # print(lec_info_ls)
     return lec_info_dict
 
 
@@ -76,27 +77,29 @@ def handle_mooc_lecture(json_path):
     save_lecture_data(all_lec_dict)
 
 
-def tmp_test():
+def read_lecture_info():
+    lectures_ls = []
     global LECTURE_DATA
     with open(LECTURE_DATA, "rb") as pwf:
         content = pickle.load(pwf)
-    print(len(content))
-    count = 0
     for lec_id, each_lec in content.items():
-        print(count)
-        print(each_lec.lec_id)
-        print(each_lec.lec_name)
-        print(each_lec.school_name)
-        print(each_lec.school_short_name)
-        print(each_lec.moc_tag_dtos)
-        print()
+        tmp_lec_dict = {}
+        tmp_lec_dict["lec_id"] = each_lec.lec_id
+        tmp_lec_dict["lec_name"] = each_lec.lec_name
+        tmp_lec_dict["school_name"] = each_lec.school_name
+        tmp_lec_dict["school_short_name"] = each_lec.school_short_name
+        tmp_lec_dict["moc_tag_dtos"] = each_lec.moc_tag_dtos
+        tmp_lec_dict["img_url"] = each_lec.img_url
+        tmp_teacher_ls = []
         for teacher in each_lec.teacher_info:
-            print(teacher.real_name)
-            print(teacher.lector_title)
-            print('***************')
-        print('-----------------------------------------------')
-        count += 1
+            tmp_teacher_ls.append(teacher.real_name)
+            tmp_teacher_ls.append(teacher.lector_title)
+        tmp_lec_dict["teachers"] = tmp_teacher_ls
+        lectures_ls.append(tmp_lec_dict)
+    return lectures_ls
+
 
 
 # handle_mooc_lecture("mooc_data/mooc_url")
-# tmp_test()
+# temp = read_lecture_info()
+# print(temp)

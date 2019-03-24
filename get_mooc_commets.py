@@ -84,6 +84,6 @@ def test():
         for lec_id in lec_id_ls:
             request_lec_comments(lec_id)
 
-test()
+
 
 # page count: "totlePageCount":35
