@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}首页{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }} ">
+{% endblock %}
+
+
+{% block main %}
+<form action="" method="POST">
+    <div class="form-container">
+        <div class="form-group">
+            <img src="{{url_for('static',filename='img/soke299*155.jpg')}}" alt="" class="avatar">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search for..." name="query">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-default" >Go!</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
