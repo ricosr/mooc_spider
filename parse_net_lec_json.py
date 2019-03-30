@@ -70,7 +70,7 @@ def handle_net_lecture(json_path, lecture_data_path):
         all_lec_dict.update(temp_lec_info)
     save_lecture_data(all_lec_dict, lecture_data_path)
 
-
-handle_net_lecture(LECTURE_JSON, LECTURE_DATA)
+if __name__ == '__main__':
+    handle_net_lecture(LECTURE_JSON, LECTURE_DATA)
 # temp = read_lecture_info()
 # print(temp)

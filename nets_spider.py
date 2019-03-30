@@ -7,13 +7,6 @@ import requests
 
 def get_response_json(url, cookie, data):
     try:
-        # headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36",
-        #            "Accept": "text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        #            "Accept-Language": "en-us",
-        #            "Connection": "keep-alive",
-        #            "Accept-Charset": "GB2312,utf-8;q=0.7,*;q=0.7",
-        #            "cookie": cookie
-        #            }
         headers = {
             "authority": "study.163.com",
             "method": "POST",
@@ -36,18 +29,6 @@ def get_response_json(url, cookie, data):
         return response.text
     except Exception as e:
         print(e)
-
-
-def get_lectures_urls():
-    pass
-
-
-def get_comment_content():
-    pass
-
-
-def save_comment():
-    pass
 
 
 def save_data(json_data, path):

@@ -139,5 +139,5 @@ def test(block_count):
             request_lec_comments(lec_id, COMMENT_PICKLE)
 
 # request_lec_comments("1003852044", COMMENT_PICKLE)
-
-test(5)
+if __name__ == '__main__':
+    test(5)
