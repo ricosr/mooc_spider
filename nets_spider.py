@@ -5,7 +5,7 @@ import json
 import requests
 
 
-def get_page_html(url, cookie, data):
+def get_response_json(url, cookie, data):
     try:
         # headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36",
         #            "Accept": "text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     key_words_ls = ["Python", "数据挖掘", "Java", "C语言", "前端开发", "IOS", "数据分析", "人工智能", "大数据", "大数据", "区块链"]
     # "Python", "数据挖掘", "Java", "C语言", "前端开发", "IOS", "数据分析", "人工智能", "大数据", "大数据", "区块链"
     for key_word in key_words_ls:
-        count = 0
+        count = 1
         while True:
             data = {
                         "pageIndex": "{}".format(count),
@@ -75,7 +75,7 @@ if __name__ == '__main__':
                         "qualityType": 0
             }
 
-            json_content = get_page_html(URL, cookie, data)
+            json_content = get_response_json(URL, cookie, data)
             if not json.loads(json_content)["result"]["list"]:
                 break
             save_data(json_content, "net_data/net_url/{}_page_{}.json".format(key_word, count))
