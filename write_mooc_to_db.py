@@ -6,7 +6,7 @@ from parse_mooc_comments_json import read_comments_info, COMMENTS_DATA
 
 
 def connect_db():
-    client = pymongo.MongoClient("mongodb://super_sr:123456@209.97.166.185:27017/admin")
+    client = pymongo.MongoClient("mongodb://xxx:xxxxxx@209.97.xxx.xxx:27017/admin")
     db_opt = client["mooc_db_sr"]
     return db_opt
 
