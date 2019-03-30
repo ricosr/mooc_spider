@@ -58,19 +58,26 @@ def save_data(json_data, path):
 if __name__ == '__main__':
     URL = "https://study.163.com/p/search/studycourse.json"
     cookie = "usertrack=CrHuaVxnc/u07+fAAy54Ag==; _ntes_nnid=daaa9fcf449d023308cf75dd9723a92c,1550283771180; _ntes_nuid=daaa9fcf449d023398cf75dd9723a92c; P_INFO=ricosr@163.com|1550497883|0|other|00&99|hongkong&1550496512&mail_client#hongkong&810000#10#0#0|&0|youdaodict_client|ricosr@163.com; mail_psc_fingerprint=35dd15f189a94ebd1d0f0fea63ded83c; EDUWEBDEVICE=63d891ba96bc4407ac77d75669dff188; __utmz=129633230.1550990328.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); NTESSTUDYSI=a428291b5655402c9251ee7ff6b9ff2f; __utma=129633230.1904989255.1550990328.1551058647.1551075098.7; __utmc=129633230; STUDY_UUID=ae9c594e-2c92-452b-a12a-f431e4c0f150; utm=eyJjIjoiIiwiY3QiOiIiLCJpIjoiIiwibSI6IiIsInMiOiIiLCJ0IjoiIn0=|aHR0cHM6Ly9zdHVkeS4xNjMuY29tL2NhdGVnb3J5LzQ4MDAwMDAwMzEyMTAwNw==; __utmb=129633230.98.9.1551085437256"
+    key_words_ls = ["Python", "数据挖掘", "Java", "C语言", "前端开发", "IOS", "数据分析", "人工智能", "大数据", "大数据", "区块链"]
+    # "Python", "数据挖掘", "Java", "C语言", "前端开发", "IOS", "数据分析", "人工智能", "大数据", "大数据", "区块链"
+    for key_word in key_words_ls:
+        count = 0
+        while True:
+            data = {
+                        "pageIndex": "{}".format(count),
+                        "pageSize": 50,
+                        "relativeOffset": 0,
+                        "keyword": key_word,
+                        "searchTimeType": -1,
+                        "orderType": 50,
+                        "priceType": -1,
+                        "activityId": 0,
+                        "qualityType": 0
+            }
 
-    for i in range(1, 4):
-        data = {
-                    "pageIndex": "{}".format(i),
-                    "pageSize": 50,
-                    "relativeOffset": 0,
-                    "keyword": "python",
-                    "searchTimeType": -1,
-                    "orderType": 50,
-                    "priceType": -1,
-                    "activityId": 0,
-                    "qualityType": 0
-        }
+            json_content = get_page_html(URL, cookie, data)
+            if not json.loads(json_content)["result"]["list"]:
+                break
+            save_data(json_content, "net_data/net_url/{}_page_{}.json".format(key_word, count))
+            count += 1
 
-        json_content = get_page_html(URL, cookie, data)
-        save_data(json_content, "net_data/net_url/python_page_{}.json".format(i))
