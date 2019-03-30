@@ -1,0 +1,130 @@
+# -*- coding: utf-8 -*-
+
+# download comments from all lectures
+
+import pickle
+import json
+import threading
+
+import requests
+
+COMMENT_JSON = "net_data/lecture_comments"
+LECTURE_DATA = "net_data/lectures_data.pkl"
+
+
+def read_lec_data(lec_data_path):
+    with open(LECTURE_DATA, "rb") as pwf:
+        content = pickle.load(pwf)
+    lec_id_ls = list(content.keys())
+    return lec_id_ls
+
+
+def save_comment_json(course_id, file_path, json_data):
+    with open("{}/{}.json".format(file_path, course_id), 'w', encoding='utf-8') as fpr:
+        fpr.write(json_data)
+
+
+def parse_comments_response(response_content):
+    data_ls = response_content.split('\n')
+    for each in data_ls:
+        if "totlePageCount" in each:
+            totle_page_count_index = data_ls.index(each)
+            tmp_line_ls = each.split(';')
+            for element in tmp_line_ls:
+                if 
+
+
+
+
+
+def request_lec_comments(courseId):
+    url = "https://study.163.com/dwr/call/plaincall/AskCommentBean.getOnePageComment.dwr"
+    cookie = "usertrack=CrHuaVxnc/u07+fAAy54Ag==; _ntes_nnid=daaa9fcf449d023398cf75dd9723a92c,1550283771180; _ntes_nuid=daaa9fcf449d023398cf75dd9723a92c; P_INFO=ricosr@163.com|1550497883|0|other|00&99|hongkong&1550496512&mail_client#hongkong&810000#10#0#0|&0|youdaodict_client|ricosr@163.com; mail_psc_fingerprint=35dd15f189a94ebd1d0f0fea63ded83c; NTESSTUDYSI=49cd2e37570f45a6b4761c1ec5fc96fd; EDUWEBDEVICE=63d891ba96bc4407ac77d75669dff188; __utmc=129633230; __utmz=129633230.1550990328.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); STUDY_UUID=a9513a51-a170-4f7b-86ea-f2fa1c73b574; utm=eyJjIjoiIiwiY3QiOiIiLCJpIjoiIiwibSI6IiIsInMiOiIiLCJ0IjoiIn0=|aHR0cHM6Ly9zdHVkeS4xNjMuY29tL2NvdXJzZS9pbnRyb2R1Y3Rpb24vMTAwNTY4MDAxMS5odG0=; __utma=129633230.1904989255.1550990328.1550990328.1550997685.2; __utmb=129633230.3.8.1550997688164"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) ",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-us",
+        "Connection": "keep-alive",
+        "Accept-Charset": "GB2312,utf-8;q=0.7,*;q=0.7",
+        "cookie": cookie
+    }
+
+    data = {
+        'callCount': '1',
+        'scriptSessionId': '${scriptSessionId}190',
+        'httpSessionId': '49cd2e37570f45a6b4761c1ec5fc96fd',
+        'c0-scriptName': 'AskCommentBean',
+        'c0-methodName': 'getOnePageComment',
+        'c0-id': '0',
+        'c0-param0': 'string:1003852044',
+        'c0-param1': 'number:30',
+        'c0-param2': 'number:1',
+        'batchId': '1550997687681'
+    }
+
+    response = requests.post(url, data, headers=headers)
+
+
+
+
+    url = "https://www.icourse163.org/web/j/mocCourseV2RpcBean.getCourseEvaluatePaginationByCourseIdOrTermId.rpc?csrfKey=d716f7686cf944cbbffa1977e7739221"
+    cookie = "NTESSTUDYSI=d716f7686cf944cbbffa1977e7739221; EDUWEBDEVICE=a32f0ffb30ed4f0f878f567ebf5d7c30; hb_MA-A976-948FFA05E931_source=www.google.com; __utmc=63145271; __utmz=63145271.1550992805.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); WM_NI=%2Fkb3Anlp6vVqZkDILsGLg%2BCwSHazM9hAUYix3BnKYODc8Q5X6Y3v92WIUfMlGlBrA7U9XMqRPHmjbafoQgy%2F8BCzC%2BS8Dmb8aLRb8SZd8%2BhZHok%2BVh3DLnj8WZqWOZmZN0Y%3D; WM_NIKE=9ca17ae2e6ffcda170e2e6eed2d749b396a384f94b82ac8aa3c45a868b9fbaee6dac95fc87d55e8e88bd84c52af0fea7c3b92aedb5aed4c466b0b0fa97d57b9ab58caacf798594a9ccc27d9198af9bd033ac9f9bbaec74f19ea2acdc4588bdf8b2b854f687fd97bc3a95979b87d06885b48e93c43d97e798aef45a9498a38be16ba6b19f88fc25fc9e8d9bc22191e88c8ee134a3949e83bb599abcf8cceb528cb1a5ccd564f19c848fe9349586bfb8ce52af8682d1dc37e2a3; WM_TID=opyJCGkLpOlEERQFRUJ4llLsaBAcT9cU; __utma=63145271.661424980.1550992805.1550992805.1550994952.2"
+    headers = {
+         "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) ",
+         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+         "Accept-Language": "en-us",
+         "Connection": "keep-alive",
+         "Accept-Charset": "GB2312,utf-8;q=0.7,*;q=0.7",
+         "cookie": cookie
+    }
+    json_str = ''
+    page_no = 1
+    data = {'courseId': courseId, 'pageIndex': page_no, 'pageSize': '20', 'orderBy': '3'}
+    first_response = requests.post(url, data, headers=headers)
+    json_str += first_response.text + '\n'
+    # global COMMENT_JSON
+    # save_comment_json(courseId, COMMENT_JSON, first_response.text + '\n')
+    total_page_count = int(json.loads(first_response.text)["result"]["query"]["totlePageCount"])
+
+    if total_page_count > 1:
+        for page_count in range(2, total_page_count+1):
+            data = {'courseId': courseId, 'pageIndex': page_count, 'pageSize': '20', 'orderBy': '3'}
+            tmp_response = requests.post(url, data, headers=headers)
+            json_str += tmp_response.text + '\n'
+    # print(json_str)
+    save_comment_json(courseId, COMMENT_JSON, json_str)
+
+
+def mul_thread_crawl(threading_num, block_ls):
+    def download_fun(course_id_ls):
+        for course_id in course_id_ls:
+            request_lec_comments(course_id)
+    thread_ls = []
+    for i in range(threading_num):
+        thread_ls.append(threading.Thread(target=download_fun, args=(block_ls[i],)))
+    for i in range(threading_num):
+        thread_ls[i].start()
+
+
+def test():
+    global LECTURE_DATA
+    lec_id_ls = read_lec_data(LECTURE_DATA)
+    if len(lec_id_ls) > 3:
+        block_size = len(lec_id_ls) // 3
+        block_ls = []
+
+        start_index = 0
+        for i in range(3):
+            block_ls.append(lec_id_ls[start_index:start_index+block_size])
+            start_index = start_index + block_size
+        if start_index < len(lec_id_ls):
+            block_ls.append(lec_id_ls[start_index:])
+        threading_num = len(block_ls)
+        mul_thread_crawl(threading_num, block_ls)
+    else:
+        for lec_id in lec_id_ls:
+            request_lec_comments(lec_id)
+
+
+
+# page count: "totlePageCount":35
