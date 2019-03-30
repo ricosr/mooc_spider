@@ -26,7 +26,7 @@ def read_db():
     db_opt = connect_db()
     collections_names = db_opt.collection_names()
     collections_names.remove('system.indexes')
-    for collection in collections_names:
+    for collection in collections_names[:1]:
         print(next(db_opt[collection].find()))
 
 

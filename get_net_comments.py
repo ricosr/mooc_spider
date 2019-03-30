@@ -13,7 +13,7 @@ LECTURE_DATA = "net_data/lectures_data.pkl"
 
 
 def read_lec_data(lec_data_path):
-    with open(LECTURE_DATA, "rb") as pwf:
+    with open(lec_data_path, "rb") as pwf:
         content = pickle.load(pwf)
     lec_id_ls = list(content.keys())
     return lec_id_ls

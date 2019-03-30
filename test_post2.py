@@ -22,7 +22,7 @@ data = {
         'c0-id': '0',
         'c0-param0': 'string:1003852044',
         'c0-param1': 'number:30',
-        'c0-param2': 'number:1',
+        'c0-param2': 'number:3',
         'batchId': '1550997687681'
     }
 
@@ -37,4 +37,13 @@ response = requests.post(url, data, headers=headers)
 
 # page count: s1.totlePageCount=2;
 
-print(response.text)
+print(len(response.text.split('\n')))
+
+# import random
+# d1 = {}
+# for i in range(10):
+#     d = {}
+#     d[i] = i*random.randint(1, 100)
+#     d1[i] = d
+#
+# print(d1)
