@@ -98,7 +98,6 @@ def read_lecture_info(lecture_data_path):
     return lectures_ls
 
 
+if __name__ == '__main__':
+    handle_mooc_lecture(LECTURE_JSON, LECTURE_DATA)
 
-# handle_mooc_lecture(LECTURE_JSON)
-# temp = read_lecture_info()
-# print(temp)

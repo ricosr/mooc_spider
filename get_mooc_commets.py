@@ -65,15 +65,15 @@ def mul_thread_crawl(threading_num, block_ls):
         thread_ls[i].start()
 
 
-def test():
+def start_get(block_count):
     global LECTURE_DATA
     lec_id_ls = read_lec_data(LECTURE_DATA)
-    if len(lec_id_ls) > 3:
-        block_size = len(lec_id_ls) // 3
+    if len(lec_id_ls) > block_count:
+        block_size = len(lec_id_ls) // block_count
         block_ls = []
 
         start_index = 0
-        for i in range(3):
+        for i in range(block_count):
             block_ls.append(lec_id_ls[start_index:start_index+block_size])
             start_index = start_index + block_size
         if start_index < len(lec_id_ls):
@@ -85,5 +85,5 @@ def test():
             request_lec_comments(lec_id)
 
 
-
-# page count: "totlePageCount":35
+if __name__ == '__main__':
+    start_get(3)

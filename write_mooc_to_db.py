@@ -31,6 +31,6 @@ def read_db():
 
 
 if __name__ == '__main__':
-    # comment_ls = read_comments_info(COMMENTS_DATA)
-    # handle_db(comment_ls)
-    read_db()
+    comment_ls = read_comments_info(COMMENTS_DATA)
+    handle_db(comment_ls)
+    # read_db()

@@ -53,3 +53,6 @@ def get_lec_ids(lec_type_no):
             break
         save_data(json_data, "mooc_data/mooc_url/computer_page_{}.json".format(count))
         count += 1
+
+if __name__ == '__main__':
+    get_lec_ids("1001043131")
