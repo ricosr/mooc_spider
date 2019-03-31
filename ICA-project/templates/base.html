@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %}-Courses Search Platfrom</title><!--block表示可以改变的部分，标题中是主页还是结果都可以改变-->
+
+    <!--nav用到bootstrap样式，所以要把这些样式复制过来-->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css')}}">
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{ url_for('static',filename='js/jquery-3.3.1.js')}}"></script>
+    <link rel="stylesheet"  href="{{ url_for('static',filename='css/base.css')}}">
+
+    {% block head %}{% endblock %}<!--不同模版css文件，js文件加载得不一样，所以要给一个head自定义-->
+</head>
+
+
+<body>
+<!-- 顶部导航栏开始啦 -->
+	<div class="header">
+		<div class="inner">
+			<div class="logo"> <!-- 放logo 左浮动 -->
+				<a href="#"><img src="{{ url_for('static',filename='images/左上logo.png')}}"/></a>
+	            </div>
+				<div class="searcht">
+					<form action="" method="POST" class="navbar-form navbar-left" >
+						<div class="form-group">
+                			<input type="text" class="form-control" placeholder="Search"  style="width:280px; height:20px;"  name="query">
+            			</div>
+            			    <button type="submit" class="btn btn-default">go</button>
+    				</form>
+
+			<div class="nav"> <!-- 导航栏  右浮动 -->
+				<ul>
+					<li></li>
+					<li><a href="index.html">首页</a></li>
+					<li><a href="#">搜索记录</a></li>
+					<li><a href="login.html">登录</a></li>
+					<li><a href="zhuce.html">注册</a></li>
+					<li><a href="#">退出</a></li>
+					<li><a href="aboutus.html">关于我们</a></li>
+				</ul>
+			</div>
+		</div>
+	 </div>
+</div>
+<!-- 顶部导航栏结束啦 -->
+
+    <div class="main">
+        {% block main %}{% endblock %}
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	background-color: #fafafa;
+	height: 3000px;
+}
+li {
+	list-style: none; /*  取消li 的小点 */
+}
+
+
+/* 顶部导航栏开始啦 */
+.header {
+	height: 110px;
+	background-color: #fff;
+	position: fixed;
+	width: 100%;
+	top:0;
+	left:0;
+}
+.inner {
+	width: 1200px;
+	height: 100px;
+	/* background-color: pink; */
+	margin: 0 auto;
+	line-height: 100px;
+}
+.logo {
+	float: left;
+	}
+.logo a img{
+	width: 190px;
+	height: 90px;
+}
+.searcht{
+	position: relative;
+	bottom: 0;
+}
+.searcht button{
+	width: 49px;
+	height: 40px;
+	border: 0;
+	outline: none;
+	float: left;
+	background: url(../images/fa-search.png) no-repeat;
+}
+.nav {
+	float: right;
+}
+.nav li  {
+	float: left;
+	margin: 0 15px;
+}
+.nav li a {
+	color: #333;
+	text-decoration: none;
+}
+.nav li a:hover {
+	color: #2288f6;
+}
+.abu {
+	height: 620px;
+	background: url(../images/aus.jpg) no-repeat top center;
+	margin: 110px 3px auto;
+}
+.abu .title{
+	text-align: center;
+	margin: 10PX auto;
+	color: white;
+	line-height: 400px;
+}
+.title2 {
+	text-align: center;
+	margin: 0 auto;
+	color: white;
+	line-height: 0px;
+	font-size: 20px;
+}
+.mp {
+	border-top: 1px solid #ccc;
+	margin: -10 25px;
+	}
+.mp h3{
+	width: 167px;
+	height: 46px;
+	margin: -15px auto 0;
+	}
+
+.mp h3 img{
+	width: 150px;
+	height: 30px;
+}
+.mp p{
+	font-size: 15px;
+	color: #666;
+	line-height: 26px;
+	text-align: center;
+	width: 830px;
+	margin: 15px  auto 0;
+}

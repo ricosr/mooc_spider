@@ -1,0 +1,49 @@
+{% extends 'base.html' %}<!--继承自base模板-->
+
+{% block title %}Home Page{% endblock %}
+
+{% block head %} <!--自定义的head部分，拼接到blockhead-->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }} ">
+{% endblock %}
+	
+
+{% block main %} <!--自定义的main部分，拼接到  block main. endblock ，可以自定义除了导航栏的其他部分-->
+<!-- banner star -->
+   <div class="banner">
+   
+   </div>
+   <!-- banner end -->
+
+   <!-- 我们服务模块 -->
+   <div class="service">
+      <div class="service-hd">
+        <h3>
+          <img src="images/ser1.png">
+        </h3>
+        <p>We decide to create a website which implement the web search of the courses and related comments via engine for computer Learners.</p>
+        <div class="service-bd">
+          <ul>
+            <li>
+              <img src="images/icon1.png" alt="">
+              <h3>评分搜索</h3>
+              <p>通过星级评分高低查看你想要的课程</p>
+              <a href="search.html">我要体验</a>
+            </li>
+            <li class="goumailiang">
+              <img src="images/icon2.png" alt="">
+              <h3>购买量搜索</h3>
+              <p>通过购买的数量的高低来查看你想要的课程</p>
+              <a href="search.html">我要体验</a>
+            </li>
+            <li>
+              <img src="images/icon3.png" alt="">
+              <h3>评论数搜索</h3>
+              <p>通过课程评论书目的高低查看你想要的课程</p>
+              <a href="search.html">我要体验</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+   </div>
+{% endblock %}

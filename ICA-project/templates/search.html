@@ -1,0 +1,56 @@
+{% extends 'base.html' %}<!--继承自base模板-->
+
+{% block title %}Result{% endblock %}
+
+{% block head %} <!--自定义的head部分，拼接到blockhead-->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/search.css') }} ">
+{% endblock %}
+
+{% block main %}
+<!-- 搜索课程权重 -->
+    <div class="recommend w">
+          <div class="rec-l">
+               <strong>搜索排名（由高到低）</strong>|
+               <a href="#">综合排序</a> | 
+               <a href="#">课程评分</a> | 
+               <a href="#">购买量</a> | 
+               <a href="#">情感</a> | 
+               <a href="#">评论数</a> | 
+               <a href="#"> 是否是国家精品课
+                <input type="radio" name="merry"> 是
+                <input type="radio" name="merry"> 否</a> | 
+               <a href="#">慕课网<input type="checkbox" checked="checked"></a> | 
+               <a href="#">VIP：网易云<input type="checkbox" checked="checked"></a> </a> | 
+          </div>
+          <em></em>
+    </div>
+    <!-- 精品产品 -->
+     <div class="products w">
+
+
+               <ul>
+                   {% for i in con %}
+                    <li>
+                         <div class="pic">
+                              <img src={{i.img_url}} >
+                         </div>
+                        <p>
+                              <span>{{i.lec_name}}</span>
+
+                         </p>
+                         <p>
+                              <span>{{i.school_name}}</span>
+
+                         </p>
+                        <p>
+                              <span>{{i.average}}</span>
+
+                         </p>
+
+                    </li>
+                   {% endfor %}
+                    
+               </ul>
+
+     </div>
+{% endblock %}

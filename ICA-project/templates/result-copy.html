@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}结果{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/result.css') }} ">
+{% endblock %}
+
+
+{% block main %}
+
+    <ul>
+        {% for i in con %}
+             <li>
+                <div class="question-group">
+                    <p class="question-id"><a href="#">{{i.lec_id}}</a></p>
+                    <p class="question-average">{{i.average}}</p>
+                    <p class="question-lecname">{{i.lec_name}}</p>
+                    <p class="question-schoolname">{{i.school_name}}</p>
+                    <img src={{i.img_url}}>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+
+
+
+

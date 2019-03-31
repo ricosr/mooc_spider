@@ -1,0 +1,116 @@
+<!-- 顶部导航栏开始啦 -->
+	<div class="header">
+		<div class="inner">
+			<div class="logo"> <!-- 放logo 左浮动 -->
+				<a href="#"><img src="{{ url_for('static',filename='images/左上logo.png')}}"/></a>
+	            </div>
+	  
+
+			<div class="nav"> <!-- 导航栏  右浮动 -->
+				<ul>
+					<li></li>
+					<li><a href="index.html">首页</a></li>
+					<li><select name="" id="">
+                            <option value="">选择课程</option>
+                            <option value="">JAVA</option>
+                            <option value="">网站前端开发</option>
+                            <option value="">PHP</option>
+                            <option value="">C/C++</option>
+                            <option value="">Python</option>
+                            <option value="">IOS</option>
+                        </select></li>
+					<li><a href="#">搜索记录</a></li>
+					<li><a href="login.html">登录</a></li>
+					<li><a href="zhuce.html">注册</a></li>
+					<li><a href="#">退出</a></li>
+					<li><a href="aboutus.html">关于我们</a></li>
+					<li><a href="#">帮助</a></li>
+				</ul>
+			</div>
+		</div>
+	 </div>
+</div>
+<!-- 顶部导航栏结束啦 -->
+
+
+
+<!-- 顶部导航栏开始啦 -->
+	<div class="header">
+		<div class="inner">
+			<div class="logo"> <!-- 放logo 左浮动 -->
+				<a href="#"><img src="{{ url_for('static',filename='images/左上logo.png')}}"/></a>
+	            </div>
+	   
+				
+			<form action="" method="POST">
+    			<div class="form-container">
+        				<div class="form-group">
+            				<img src="{{url_for('static',filename='img/soke299155.jpg')}}" alt="" class="avatar">
+        				</div>
+        		<div class="form-group">
+            			<input type="text" class="form-control" placeholder="Search for..." name="query">
+        		</div>
+       			<div class="form-group">
+            		<button class="btn btn-default" >Go!</button>
+        		</div>
+    			</div>
+			</form>
+
+
+			<div class="nav"> <!-- 导航栏  右浮动 -->
+				<ul>
+					<li></li>
+					<li><a href="index.html">首页</a></li>
+					<li><select name="" id="">
+                            <option value="">选择课程</option>
+                            <option value="">JAVA</option>
+                            <option value="">网站前端开发</option>
+                            <option value="">PHP</option>
+                            <option value="">C/C++</option>
+                            <option value="">Python</option>
+                            <option value="">IOS</option>
+                        </select></li>
+					<li><a href="#">搜索记录</a></li>
+					<li><a href="login.html">登录</a></li>
+					<li><a href="zhuce.html">注册</a></li>
+					<li><a href="#">退出</a></li>
+					<li><a href="aboutus.html">关于我们</a></li>
+					<li><a href="#">帮助</a></li>
+				</ul>
+			</div>
+		</div>
+	 </div>
+</div>
+<!-- 顶部导航栏结束啦 -->
+
+
+
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid"> 
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">菜鸟教程</a>
+    </div>
+    <form action="" method="POST" class="navbar-form navbar-left">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search" name="query">
+        </div>
+        <button type="submit" class="btn btn-default">提交</button>
+    </form>
+    </div>
+
+    </div>
+    <ul class="nav navbar-nav navbar-right"> 
+             {% if result %}
+                <li><a href="#">{{result.username}}</a></li>
+                <li><a href="{{url_for('logout')}}">注销</a></li>
+               {% else %}
+                <li><a href="{{url_for('login')}}">登录</a></li>
+                <li><a href="{{url_for('regist')}}">注册</a></li>
+              {% endif %}
+
+    </ul> 
+    </div>
+
+
+</nav>
