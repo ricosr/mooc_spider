@@ -9,7 +9,7 @@ from jieba.analyse import ChineseAnalyzer
 analyzer = ChineseAnalyzer()
 import pymongo
 def connect_db():
-    client = pymongo.MongoClient("mongodb://super_sr:123456@209.97.166.185:27017/admin")
+    client = pymongo.MongoClient("mongodb://address")
     db_opt = client["mooc_db_sr"]
     return db_opt
 
@@ -83,7 +83,7 @@ def search_index(query):
         #     print(results[i]);print('\n') #IndexError: results[10]: Results only has 10 hits
         print(results)
         count = 0
-        client = pymongo.MongoClient("mongodb://super_sr:123456@209.97.166.185:27017/admin")
+        client = pymongo.MongoClient("mongodb://address")
         db_opt = client["course_info"]
         b = list()
         for i in results:
