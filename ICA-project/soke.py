@@ -52,6 +52,11 @@ def index():
         # else:
         #     return '无相关搜索结果'
 
+@app.route('/test')
+def test():
+
+    return render_template('test.html')
+
 
 
 

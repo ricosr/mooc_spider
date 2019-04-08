@@ -1,0 +1,42 @@
+{% extends 'base.html' %}<!--继承自base模板-->
+
+{% block title %}Result{% endblock %}
+
+{% block head %} <!--自定义的head部分，拼接到blockhead-->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/test.css') }} ">
+{% endblock %}
+
+{% block main %}
+
+
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+
+			<div class="panel panel-default">
+
+				<div class="panel-body">
+					<div class="media">
+				 <a href="#" class="pull-left"><img src="http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100" class="media-object" alt='' /></a>
+				<div class="media-body">
+					<h4 class="media-heading">
+						多媒体技术及应用
+					</h4> <p> 深圳大学<br/>
+   							 评分：4.653<br/>
+						</p>
+						<p>
+				 			<a class="btn" href="#">View details »</a>
+						</p>
+				</div>
+			</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
