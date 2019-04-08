@@ -31,7 +31,7 @@ def get_lec_info(result_obj):
         if product_id != lec_info_dict["lec_id"]:
             continue
 
-        lec_info_dict["lec_name"] = each_obj["productName"]
+        lec_info_dict["lecture_name"] = each_obj["productName"]
 
         lec_info_dict["learner_count"] = each_obj["learnerCount"]
         lec_info_dict["lesson_count"] = each_obj["lessonCount"]
