@@ -1,50 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>搜课搜索结果页面</title>
-        <!-- 引入外面的css文件 -->
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/aboutus.css') }} ">
-</head>
-<body>
-    <!-- 顶部导航栏开始啦 -->
-    <div class="header">
-        <div class="inner">
-            <div class="logo"> <!-- 放logo 左浮动 -->
-                <a href="#"><img src="images/左上logo.png"/></a>
-            </div>
-                <div class="searcht">
-                    <input type="text" style="width:280px; height:20px;">
-                    <input type="button" value="go!">
-        
-            <div class="nav"> <!-- 导航栏  右浮动 -->
-                <ul>
-                    <li></li>
-                    <li><a href="index.html">首页</a></li>
-                    <li><select name="" id="">
-                            <option value="">选择课程</option>
-                            <option value="">JAVA</option>
-                            <option value="">网站前端开发</option>
-                            <option value="">PHP</option>
-                            <option value="">C/C++</option>
-                            <option value="">Python</option>
-                            <option value="">IOS</option>
-                        </select></li>
-                    <li><a href="#">搜索记录</a></li>
-                    <li><a href="login.html">登录</a></li>
-                    <li><a href="zhuce.html">注册</a></li>
-                    <li><a href="#">退出</a></li>
-                    <li><a href="#">关于我们</a></li>
-                    <li><a href="#">帮助</a></li>
-                </ul>
-            </div>
-        </div>
-     </div>
-</div>
-<!-- 顶部导航栏结束啦 -->
+{% block title %}登录{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{url_for('static',filename='css/aboutus.css')}}" >
+{% endblock %}
+{% block main %}
 <div class="abu">
     <h1 class="title">Soke,让您快速找到您所需的计算机课程</h1>
     <p class="title2">COMP5322 Internet Computing and Applications</p>
@@ -62,3 +23,5 @@
         </p>
     </div>
 </div>
+
+{% endblock %}

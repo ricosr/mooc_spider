@@ -25,7 +25,7 @@ app.config.update(
 mongo = PyMongo(app)
 
 
-
+con=None
 
 @app.route('/',methods=['GET','POST'])
 def index():
@@ -33,10 +33,12 @@ def index():
     if request.method == 'GET':
         return render_template('index.html')
     else:
-        query = request.form.get('query') #从表单中获取用户的输入
-        print(query)
+        query = request.form.get('query')               #从表单中获取用户的输入
 
+        global con
+        print(query)
         seta = search_index(query)
+
         con =  set_info(seta)
         print(con)
         #
@@ -48,7 +50,7 @@ def index():
         #         'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100',
         #         'flag': 1}]
 
-        return render_template('search.html', **locals())
+        return render_template('search.html', con=con)
         # else:
         #     return '无相关搜索结果'
 
@@ -148,6 +150,18 @@ def question():
         # mongo.db.session.commit()
         return redirect(url_for('index'))
 
+
+@app.route('/searchall/',methods=['get', 'post'])
+def searchall():
+    # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
+    global con
+    return render_template('searchall.html',con=con)
+
+
+@app.route('/aboutus/')
+def aboutus():
+
+    return render_template('aboutus.html')
 
 
 @app.context_processor

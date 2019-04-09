@@ -1,97 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}<!--继承自base模板-->
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>搜课网登录界面</title>
+{% block title %}首页{% endblock %}
+
+{% block head %} <!--自定义的head部分-->
     <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }} ">
-    <style>
-        tr {
-            height: 40px;
-        }
-        
-        input {
-            color: #ccc;
-        }
-    </style>
-</head>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/login_regist.css') }} ">
+{% endblock %}
 
-<body>
-    <!-- 顶部导航栏开始啦 -->
-    <div class="header">
-        <div class="inner">
-            <div class="logo"> <!-- 放logo 左浮动 -->
-                <a href="#"><img src="images/左上logo.png"/></a>
+
+{% block main %}
+
+
+
+    <form action="" method="POST">
+        <div class="form-container">
+            <h3 class="page-title">Sign in</h3>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Phone number" name="telephone">
             </div>
-                <div class="searcht">
-                    <input type="text" style="width:280px; height:20px;">
-                    <input type="button" value="go!">
-        
-            <div class="nav"> <!-- 导航栏  右浮动 -->
-                <ul>
-                    <li></li>
-                    <li><a href="index.html">首页</a></li>
-                    <li><select name="" id="">
-                            <option value="">选择课程</option>
-                            <option value="">JAVA</option>
-                            <option value="">网站前端开发</option>
-                            <option value="">PHP</option>
-                            <option value="">C/C++</option>
-                            <option value="">Python</option>
-                            <option value="">IOS</option>
-                        </select></li>
-                    <li><a href="#">搜索记录</a></li>
-                    <li><a href="login.html">登录</a></li>
-                    <li><a href="zhuce.html">注册</a></li>
-                    <li><a href="#">退出</a></li>
-                    <li><a href="#">关于我们</a></li>
-                    <li><a href="#">帮助</a></li>
-                </ul>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" name="password">
             </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-block">Sign in </button>
+            </div>
+            <a href="{{url_for('regist')}}">New to SOKE? Create your SOKE account</a>
         </div>
-     </div>
-</div>
-<!-- 顶部导航栏结束啦 -->
-<div class="table">
-    <table width="400" align="center">
-        <tr>
-            <th colspan="2" style="font-size: 18px; color:#666;">会员登录</th>
-        </tr>
-        <tr>
-            <td>登录帐号</td>
-            <td><input type="text" value="邮箱/昵称/手机号"></td>
-        </tr>
-        <tr>
-            <td>密码</td>
-            <td><input type="text" value="密码"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="checkbox" checked="checked" />
-                <span style="color: #a4a4a4; font-size: 12px;">两周内自动登录</span>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="image" src="images/login.png"> <a href="#">忘记密码</a> </td>
-        </tr>
-        <tr>
-            <td>其他帐号登录</td>
-            <td style="font-size:12px; color: #666;"> <img src="images/ico1.png">&nbsp;&nbsp;QQ帐号 <img src="images/ico2.png">&nbsp;&nbsp;新浪微博 <img src="images/ico3.png">&nbsp;&nbsp;百度账号
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <a href="zhuce.html" target="_blank">还不是会员？立即注册</a>
-            </td>
-        </tr>
+    </form>
 
 
-    </table>
-    </div>
-</body>
 
-</html>
+{% endblock %}
+

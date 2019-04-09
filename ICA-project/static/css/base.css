@@ -12,11 +12,12 @@ li {
 }
 
 
+
 /* 顶部导航栏开始啦 */
 .header {
 	height: 110px;
 	background-color: #fff;
-	position: fixed;
+	position: relative;
 	width: 100%;
 	top:0;
 	left:0;
