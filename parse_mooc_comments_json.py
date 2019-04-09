@@ -57,11 +57,10 @@ def read_comments_info(pickle_path):    # 5
         content = pickle.load(pwf)
     return content
 
-# result = handle_mooc_comment(COMMENTS_JSON, LECTURE_DATA)
-# save_comments_data(COMMENTS_DATA, result)
-# content = read_comments_info(COMMENTS_DATA)
-# print(content[:10])
-# print(content[-10:])
+if __name__ == '__main__':
+    result = handle_mooc_comment(COMMENTS_JSON, LECTURE_DATA)
+    save_comments_data(COMMENTS_DATA, result)
+    # content = read_comments_info(COMMENTS_DATA)
 
 
 

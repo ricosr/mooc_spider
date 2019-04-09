@@ -31,7 +31,7 @@ def get_lec_info(result_obj):
         if product_id != lec_info_dict["lec_id"]:
             continue
 
-        lec_info_dict["lecture_name"] = each_obj["productName"]
+        lec_info_dict["lec_name"] = each_obj["productName"]
 
         lec_info_dict["learner_count"] = each_obj["learnerCount"]
         lec_info_dict["lesson_count"] = each_obj["lessonCount"]
@@ -40,7 +40,7 @@ def get_lec_info(result_obj):
         lector_name = each_obj["lectorName"]
         if not lector_name:
             lector_name = provider
-        lec_info_dict["lec_name"] = lector_name
+        lec_info_dict["teachers"] = [lector_name]
 
         lec_info_dict["school_name"] = provider
         lec_info_dict["school_short_name"] = ''
@@ -54,6 +54,7 @@ def get_lec_info(result_obj):
         lec_info_dict["score"] = each_obj["score"]
         lec_info_dict["score_level"] = each_obj["scoreLevel"]
 
+        lec_info_dict["lec_url"] = "https://study.163.com/course/introduction/{}.htm".format(lec_info_dict["lec_id"])
         lec_info_dict["img_url"] = each_obj["imgUrl"]
         lec_info_dict["description"] = each_obj["description"]
         tmp_lec_dict[product_id] = lec_info_dict

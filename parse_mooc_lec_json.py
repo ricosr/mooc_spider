@@ -88,6 +88,7 @@ def read_lecture_info(lecture_data_path):
         tmp_lec_dict["school_name"] = each_lec.school_name
         tmp_lec_dict["school_short_name"] = each_lec.school_short_name
         tmp_lec_dict["moc_tag_dtos"] = each_lec.moc_tag_dtos
+        tmp_lec_dict["lec_url"] = "https://www.icourse163.org/course/{}-{}".format(tmp_lec_dict["school_short_name"], tmp_lec_dict["lec_id"])
         tmp_lec_dict["img_url"] = each_lec.img_url
         tmp_teacher_dict = {}
         for teacher in each_lec.teacher_info:
