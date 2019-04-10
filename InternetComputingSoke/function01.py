@@ -147,11 +147,11 @@ def build_index(db_str, index_dir):
 
 
 # 搜索
-def search_index(query, index_dir, db_opt):
+def search_index(query, ix, db_opt):
     lec_ids = sorting.FieldFacet("lec_id")
     agreeCounts = sorting.FieldFacet("agreeCount", reverse=True)
     marks = sorting.FieldFacet("mark", reverse=True)
-    ix = open_dir(index_dir)
+    # ix = open_dir(index_dir)
     with ix.searcher() as searcher:
         parser = QueryParser("content", ix.schema)
         myquery = parser.parse(query)
@@ -200,7 +200,7 @@ def search_index(query, index_dir, db_opt):
         return_dict[aim_comment] = lec_list
         # print(count)
         print(return_dict)
-        return return_dict  # {'1554868362.5810971': [93001, 1001752002, 268001]}
+        return json.dumps(return_dict)  # {'1554868362.5810971': [93001, 1001752002, 268001]}
         # context = set_info(seta)
         # return context
 
