@@ -251,37 +251,37 @@ def searchcomment():
 def searchvipyes():
     # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
     global con
-    print(con)
+    # print(con)
     conyes=[]
     for i in con:
         if i["vip"]==1:
-            print(i)
+            # print(i)
             conyes.append(i)
         else:
             continue
-    print(conyes)
+    # print(conyes)
     return render_template('searchvipyes.html',conyes=conyes)
 
 @app.route('/searchvipno/',methods=['get', 'post'])
 def searchvipno():
     # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
     global con
-    print(con)
+    # print(con)
     conno = []
     for i in con:
         if i["vip"] == 0:
-            print(i)
+            # print(i)
             conno.append(i)
         else:
             continue
-    print(conno)
+    # print(conno)
     return render_template('searchvipno.html', conno=conno)
 
 
 
 @app.route('/comment/<lec_id>',methods=['get', 'post'])
 def comment(lec_id):
-    print(lec_id)
+    # print(lec_id)
     # lec={'lec_id':1,
     #      'agreeCount':50,#赞同数
     #      'mark':5.5,#星级
@@ -289,20 +289,21 @@ def comment(lec_id):
     #      'reply':"那里不错"
     #      }
     # lecture = mongo.db.lectures
-    lec_id=268001
-    print(lec_id)
+    # lec_id=268001
+    # print(lec_id)
     global l
-    print(l)
+    # print(l)
     client = pymongo.MongoClient("mongodb://super_sr:comppolyuhk@209.97.166.185:27017/admin")
     db = client["temporary_comment"]
     lecture = db[l]
     # g=lecture.find({'lec_id': lec_id})
-    g = lecture.find()
-    for k in g:
-        print(k)
+    # g = lecture.find()
+    # for k in g:
+    #     print(k)
+    find_results = lecture.find({'lec_id': int(lec_id)})
     context = {
-        'lectures': lecture.find({'lec_id': lec_id}).sort("agreeCount", -1),
-        'size':lecture.find({'lec_id': lec_id}).count()
+        'lectures': find_results.sort("agreeCount", -1),
+        'size':  find_results.count()
     }
 
     return render_template('comment.html',**context)

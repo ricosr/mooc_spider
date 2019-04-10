@@ -55,7 +55,7 @@ def read_db(db_str):
     collections_names.remove('system.indexes')
     # for collection in collections_names[:5]: this aims to test 5 collections in order to save time
     start = time.perf_counter()
-    for collection in collections_names[:5]:  # TODO
+    for collection in collections_names[:]:  # TODO
         print(next(db_opt[collection].find()))  # 1.4308634230000001
         # for x in db_opt[collection].find(): # 2.83240298
         #     print(x)
@@ -115,7 +115,7 @@ def build_index(db_str, index_dir):
     # 本来这边想改成传输数据库对象的，但是发现下面要根据名字进行判断，要得到它的名字很麻烦。
     collections_names = db_opt.list_collection_names()
     collections_names.remove('system.indexes')
-    for collection in collections_names[:5]:  # TODO
+    for collection in collections_names[:]:  # TODO
         print(next(db_opt[collection].find()))
         col = next(db_opt[collection].find())
         comment = col["comments"]  # collection:col is a dict, comment is a list
@@ -213,14 +213,14 @@ def cal_lec_info(db_str, de_db):
     # db_course = course["course_info"]
     general = de_db.general
     # lec_general = dict()
-    for collection in collections_names[:5]:  # TODO
+    for collection in collections_names[:]:  # TODO
         sum_grade = 0.0
         count = 0
         negative_all = 0.0
         middle_count = 0
         positive_all = 0.0
         # emotion = 0.0
-        print(next(db_opt[collection].find()))
+        # print(next(db_opt[collection].find()))
         collection = next(db_opt[collection].find())
         comment = collection["comments"]  # collection is a dict, comment is a list
         lec_id = collection['lec_id']
@@ -228,24 +228,24 @@ def cal_lec_info(db_str, de_db):
         school_name = collection['school_name']
         img_url = collection['img_url']
         lec_url = collection['lec_url']
-        emotion = 0
-        # for inner in comment:
-        #     # count += 1
-        #     # if count % 10 == 0:
-        #     #     time.sleep(5)
-        #     try:
-        #         positive, negative, sentiment = get_emotion(inner['content'])
-        #     except:
-        #         print(inner['content'])
-        #         positive, negative, sentiment = get_emotion(inner['content'])
-        #     # count_n += 1
-        #     if sentiment == 0:  # 負面
-        #         negative_all += negative
-        #     if sentiment == 1:  # 中性
-        #         middle_count += 1
-        #     if sentiment == 2:  # 積極
-        #         positive_all += positive
-        # emotion = (positive_all - negative_all)/(len(comment)-middle_count)
+        # emotion = 0
+        for inner in comment:
+            # count += 1
+            # if count % 10 == 0:
+            #     time.sleep(5)
+            try:
+                positive, negative, sentiment = get_emotion(inner['content'])
+            except:
+                print(inner['content'])
+                positive, negative, sentiment = get_emotion(inner['content'])
+            # count_n += 1
+            if sentiment == 0:  # 負面
+                negative_all += negative
+            if sentiment == 1:  # 中性
+                middle_count += 1
+            if sentiment == 2:  # 積極
+                positive_all += positive
+        emotion = (positive_all - negative_all)/(len(comment)-middle_count)
         if db_str == "mooc_db_sr":
             teachers = list(collection['teachers'].keys())
             vip = collection['moc_tag_dtos']
@@ -313,15 +313,15 @@ def sort_aim_course(lec_id, command_str):
     #     middle_list = sorted(middle_list, key=lambda each_dict: each_dict["count"], reverse=True)
     elif command_str == 'vipT':
         for z in middle_list:
-            if z['vip'] == True:  # TODO
+            if z['vip'] == 1:  # TODO
                 final_list.append(z)
     elif command_str == 'vipF':
         for z in middle_list:
-            if z['vip'] == False:  # TODO
+            if z['vip'] == 0:  # TODO
                 final_list.append(z)
-    print("-------------------------------------------")
-    for each in final_list:
-        print(each)
+    # print("-------------------------------------------")
+    # for each in final_list:
+    #     print(each)
     # print(middle_list)
     return final_list
 
