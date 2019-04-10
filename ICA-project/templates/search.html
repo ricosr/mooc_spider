@@ -4,6 +4,21 @@
 
 {% block head %} <!--自定义的head部分，拼接到blockhead-->
     <link rel="stylesheet" href="{{ url_for('static',filename='css/search.css') }} ">
+<SCRIPT language="JavaScript">
+
+    function mbar(sobj){
+    var docur1=sobj.options[sobj.selectedIndex].value;
+    if(docur1!=""){
+        window.open(docur1,"_self");
+        sobj.selectedIndex=0;
+        sobj.blur();
+    }
+}
+
+
+
+</SCRIPT>
+
 {% endblock %}
 
 {% block main %}
@@ -13,16 +28,19 @@
     <div class="recommend w">
           <div class="rec-l">
                <strong>搜索排名（由高到低）</strong>|
-               <a href="{{ url_for('searchall') }} ">综合排序</a> |
-               <a href="#">课程评分</a> |
-               <a href="#">购买量</a> |
-               <a href="#">情感</a> |
-               <a href="#">评论数</a> |
-               <a href="#"> 是否是国家精品课
-                <input type="radio" name="merry"> 是
-                <input type="radio" name="merry"> 否</a> |
-               <a href="#">慕课网<input type="checkbox" checked="checked"></a> |
-               <a href="#">VIP：网易云<input type="checkbox" checked="checked"></a> </a> |
+               <a href="{{ url_for('searchall') }} ">课程名</a> |
+               <a href="{{ url_for('searchscore') }}">课程评分</a> |
+               <a href="{{ url_for('searchsense') }}">情感</a> |
+               <a href="{{ url_for('searchcomment') }}">评论数</a> |
+               是否是国家精品课
+
+               <select name="vipselect" class="topsele" onchange="mbar(this)">
+                            <option value=" ">请选择</option>
+                            <option value="{{ url_for('searchvipyes') }}">是</option>
+                            <option value="{{ url_for('searchvipno') }}">否</option>
+              </select>
+
+
           </div>
           <em></em>
     </div>
@@ -31,10 +49,11 @@
 <div class="container">
 
  <h4>
-     共找到 3 个相关内容
+     共找到 {{con|length}} 个相关内容
  </h4>
 
-    {% for i in con %}
+
+    {% for i in con|sort(attribute='lec_name') %}
 	<div class="row clearfix">
 		<div class="col-md-12 column">
 
@@ -42,16 +61,35 @@
 
 				<div class="panel-body">
 					<div class="media">
-				 <a href="#" class="pull-left"><img src={{i.img_url}}  class="img-thumbnail" alt="Cinque Terre" width="304" height="236" /></a>
+				 <a href="{{i.lec_url}}" class="pull-left"><img src={{i.img_url}}  class="img-thumbnail" alt="Cinque Terre" width="304" height="236" /></a>
 				<div class="media-body">
+
+                    {%if i.vip==1%}
 					<h4 class="media-heading">
-						{{i.lec_name}}
-					</h4> <p> {{i.school_name}}<br/>
-   							 {{i.average}}<br/>
-						</p>
-						<p>
-				 			<a class="btn" href="#">View details »</a>
-						</p>
+                        <img src="{{ url_for('static',filename='images/vip.png') }}"/>
+                        <img src="{{ url_for('static',filename='images/recommend.png') }}"/>
+                        <a href="{{i.lec_url}}">{{i.lec_name}}</a>
+					</h4>
+                    {%else%}
+                    <h4 class="media-heading">
+                        <a href="{{i.lec_url}}">{{i.lec_name}}</a>
+					</h4>
+                    {%endif%}
+
+                    <p> {{i.school_name}}<br/>
+   							 {{"评分:"}}{{i.average}}<br/>
+                             {{"授课老师:"}}
+                             {% for j in i.teachers %}
+                                {{j}}
+                             {% endfor %}<br/>
+                             {{"评论数:"}}{{i.count}}<br/>
+                        {{"情感指数:"}}{{i.emotion}}<br/>
+
+                    </p>
+                    <p>
+				 		<a class="btn" href="{{url_for('comment',lec_id=i.lec_id) }}">View details »</a>
+
+                    </p>
 				</div>
 			</div>
 				</div>
@@ -61,6 +99,8 @@
 		</div>
 	</div>
     {% endfor %}
+
+
 </div>
 
 

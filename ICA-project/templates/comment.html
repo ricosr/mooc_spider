@@ -1,0 +1,62 @@
+{% extends 'base.html' %}<!--继承自base模板-->
+
+{% block title %}Home Page{% endblock %}
+
+{% block head %} <!--自定义的head部分，拼接到blockhead-->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }} ">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/comment.css') }} ">
+{% endblock %}
+
+{% block main %}
+
+
+
+
+
+
+<div class="container">
+
+     <h4>
+     共有 {{size}} 个命中的评论
+    </h4>
+
+    {% for lecture in lectures|sort(attribute='lec_id') %}
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+
+            <div class="panel panel-default">
+			<div class="media">
+				 <a href="#" class="pull-left"><img src="{{ url_for('static',filename='images/comment.png') }}" class="media-object" alt='' /></a>
+				<div class="media-body">
+					<h3 class="media-heading">
+						{{"课程id:"}}{{lecture.lec_id}}
+
+					</h3>
+
+                        {{"赞同数:"}}{{lecture.agreeCount}}
+                        {{"星级:"}}{{lecture.mark}}<br/>
+                        {{"评论内容:"}}{{lecture.content}}
+
+
+                    {%if lecture.reply%}
+					<div class="media">
+						 <a href="#" class="pull-left"><img src="{{ url_for('static',filename='images/reply.png') }}" class="media-object" alt='' /></a>
+						<div class="media-body">
+							<h5 class="media-heading">
+								reply
+							</h5>
+                            {{lecture.reply}}
+					</div>
+				</div>
+                    {% else %}
+                        {{lecture.reply}}
+                    {% endif %}
+			</div>
+		</div>
+	</div>
+        </div>
+</div>
+{% endfor %}
+
+
+{% endblock %}

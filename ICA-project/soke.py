@@ -1,6 +1,7 @@
 #encoding:utf-8
 from flask import Flask,jsonify,render_template,request,redirect,url_for,session
 from flask_pymongo import PyMongo
+import pymongo
 import json
 import os
 from bson.objectid import ObjectId
@@ -26,6 +27,7 @@ mongo = PyMongo(app)
 
 
 con=None
+l=None
 
 @app.route('/',methods=['GET','POST'])
 def index():
@@ -36,21 +38,56 @@ def index():
         query = request.form.get('query')               #从表单中获取用户的输入
 
         global con
+        global l
         print(query)
         seta = search_index(query)
 
-        con =  set_info(seta)
-        print(con)
-        #
-        # con = [{'lec_id': 1, 'average': 4.652, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学',
-        #         'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100',
-        #         'flag': 1},
-        #        {'lec_id': 2, 'average': 4.653, 'lec_name': '多媒体技术及应用',
-        #         'school_name': '湖南大学',
-        #         'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100',
-        #         'flag': 1}]
+        # con =  set_info(seta)
+        # print(con)
 
-        return render_template('search.html', con=con)
+        con = [{ "_id" : ObjectId("5cad6bf62983981724f41392"),
+                 "lec_id" : 1003557005,
+                 "average" : 4.875,
+                 "count" : 8,
+                 "lec_name" : "软件项目管理",
+                 "school_name" : "北京邮电大学",
+                 "vip" : 0,
+                 "emotion":1,
+                 "img_url" : "http://edu-image.nosdn.127.net/1D86CCF8C169C5F824A3876E7FE5EAA3.jpg?imageView&thumbnail=510y288&quality=100",
+                 "lec_url" : "https://www.icourse163.org/course/BUPT-1003557005",
+                 "teachers" : [ "韩万江", "张笑燕", "陆天波", "杨金翠", "孙艺" ] },
+               {"_id": ObjectId("5cad6bf62983981724f41394"),
+                "lec_id": 1003557004,
+                "average": 4.2,
+                "count": 9,
+                "lec_name": "python",
+                "school_name": "深圳大学",
+                "vip": 1,
+                "emotion": 0.5,
+                "img_url": "http://edu-image.nosdn.127.net/1D86CCF8C169C5F824A3876E7FE5EAA3.jpg?imageView&thumbnail=510y288&quality=100",
+                "lec_url": "https://www.icourse163.org/course/BUPT-1003557005",
+                "teachers": ["韩万江", "张笑燕", "陆天波", "杨金翠", "孙艺"]},
+                {"_id": ObjectId("5cad6bf62983981724f41395"),
+                 "lec_id": 1003557003,
+                 "average": 4.5,
+                 "count":  100,
+                 "lec_name": "python",
+                 "school_name": "香港理工大学",
+                 "vip": 0,
+                 "emotion": -0.5,
+                 "img_url": "http://edu-image.nosdn.127.net/1D86CCF8C169C5F824A3876E7FE5EAA3.jpg?imageView&thumbnail=510y288&quality=100",
+                 "lec_url": "https://www.icourse163.org/course/BUPT-1003557005",
+                 "teachers": ["韩万江", "张笑燕", "陆天波", "杨金翠", "孙艺"]}
+
+               ]
+
+        templ={'T1554893778_1054852': [93001, 1001752002, 268001]}
+        l=list(templ.keys())[0]
+        print(type(l))
+
+        print(l)
+
+        return render_template('search.html', con=con,l=l)
         # else:
         #     return '无相关搜索结果'
 
@@ -157,11 +194,92 @@ def searchall():
     global con
     return render_template('searchall.html',con=con)
 
+@app.route('/searchscore/',methods=['get', 'post'])
+def searchscore():
+    # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
+    global con
+    return render_template('searchscore.html',con=con)
+
+
+@app.route('/searchsense/',methods=['get', 'post'])
+def searchsense():
+    # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
+    global con
+    return render_template('searchsense.html',con=con)
+
+@app.route('/searchcomment/',methods=['get', 'post'])
+def searchcomment():
+    # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
+    global con
+    return render_template('searchcomment.html',con=con)
+
+@app.route('/searchvipyes/',methods=['get', 'post'])
+def searchvipyes():
+    # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
+    global con
+    print(con)
+    conyes=[]
+    for i in con:
+        if i["vip"]==1:
+            print(i)
+            conyes.append(i)
+        else:
+            continue
+    print(conyes)
+    return render_template('searchvipyes.html',conyes=conyes)
+
+@app.route('/searchvipno/',methods=['get', 'post'])
+def searchvipno():
+    # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
+    global con
+    print(con)
+    conno = []
+    for i in con:
+        if i["vip"] == 0:
+            print(i)
+            conno.append(i)
+        else:
+            continue
+    print(conno)
+    return render_template('searchvipno.html', conno=conno)
+
+
+
+@app.route('/comment/<lec_id>',methods=['get', 'post'])
+def comment(lec_id):
+    print(lec_id)
+    # lec={'lec_id':1,
+    #      'agreeCount':50,#赞同数
+    #      'mark':5.5,#星级
+    #      'content':'很不错啊',
+    #      'reply':"那里不错"
+    #      }
+    # lecture = mongo.db.lectures
+    lec_id=268001
+    print(lec_id)
+    global l
+    print(l)
+    client = pymongo.MongoClient("mongodb://super_sr:comppolyuhk@209.97.166.185:27017/admin")
+    db = client["temporary_comment"]
+    lecture = db[l]
+    # g=lecture.find({'lec_id': lec_id})
+    g = lecture.find()
+    for k in g:
+        print(k)
+    context = {
+        'lectures': lecture.find({'lec_id': lec_id}).sort("agreeCount", -1),
+        'size':lecture.find({'lec_id': lec_id}).count()
+    }
+
+    return render_template('comment.html',**context)
 
 @app.route('/aboutus/')
 def aboutus():
 
     return render_template('aboutus.html')
+
+
+
 
 
 @app.context_processor

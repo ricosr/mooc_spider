@@ -29,7 +29,7 @@
                <a href="{{ url_for('searchall') }} ">课程名</a> |
                <a href="{{ url_for('searchscore') }}">课程评分</a> |
                <a href="{{ url_for('searchsense') }}">情感</a> |
-               <a href="{{ url_for('searchsense') }}">评论数</a> |
+               <a href="{{ url_for('searchcomment') }}">评论数</a> |
                是否是国家精品课
 
                <select name="vipselect" class="topsele" onchange="mbar(this)">
@@ -47,11 +47,9 @@
 <div class="container">
 
  <h4>
-     共找到 {{con|length}} 个相关内容
+     共找到 {{conyes|length}} 个相关内容
  </h4>
-
-
-    {% for i in con|sort(attribute='lec_name') %}
+    {% for i in conyes|sort(attribute='lec_name') %}
 	<div class="row clearfix">
 		<div class="col-md-12 column">
 
