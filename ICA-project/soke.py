@@ -7,9 +7,9 @@ import os
 from bson.objectid import ObjectId
 from decorators import login_required
 from datetime import datetime
-from Cathy_build_search_get_query_resultdb_set import search_index
+# from Cathy_build_search_get_query_resultdb_set import search_index
 from flask_paginate import Pagination, get_page_parameter
-from Cathy_set_info import set_info
+# from Cathy_set_info import set_info
 from client import load_clients, select_client
 
 
@@ -42,6 +42,7 @@ def connect_db(db_str):
 def get_aim_course(lec_id):
     # lec_id = list(return_dict.values())
     global DB_OPT
+    print(DB_OPT)
     db_opt = DB_OPT
     middle_list = list()
     general = db_opt['general']
@@ -67,8 +68,8 @@ def index():
 
         global con
         global l
-        print(query)
-        seta = search_index(query)
+        # print(query)
+        # seta = search_index(query)
 
         # con =  set_info(seta)
         # print(con)
@@ -115,8 +116,10 @@ def index():
 
         # print(l)
         l = list(response_dict.keys())[0]
+        # print(list(response_dict.values())[0])
         con = get_aim_course(list(response_dict.values())[0])
-
+        # print(l)
+        # print(con)
 
         return render_template('search.html', con=con,l=l)
         # else:

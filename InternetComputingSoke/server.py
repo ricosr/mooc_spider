@@ -10,7 +10,7 @@ from function01 import search_index, connect_db
 # agent = control.Agent()
 context = zmq.Context()
 
-INDEX_DIR = "indexdir"
+INDEX_DIR = "D:\mooc_spider\InternetComputingSoke\indexdir"
 
 def server():
     print("start listening ......")

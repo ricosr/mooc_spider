@@ -4,7 +4,7 @@ from function01 import *
 
 # *************************
 
-index_dir = "indexdir"
+#index_dir = "indexdir"
 # refresh_index_file(index_dir)
 # build_index("mooc_db_sr", index_dir)
 # build_index("net_db_sr", index_dir)
@@ -15,11 +15,12 @@ index_dir = "indexdir"
 # # print(lec_id)
 # get_aim_course(lec_id)
 
+del_col('course_info', 'general')
 de_db = connect_db('course_info')
 cal_lec_info('mooc_db_sr', de_db)
 cal_lec_info('net_db_sr', de_db)
 
-# del_col('course_info', 'general')
+
 
 
 

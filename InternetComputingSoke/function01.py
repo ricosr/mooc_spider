@@ -180,7 +180,7 @@ def search_index(query, ix, db_opt):
         # x = db_opt.aim_comment.delete_many({})
         #
         # print(x.deleted_count, "个文档已删除")
-        aim_comment = str(time.time())  # TODO
+        aim_comment = 'T' + str(time.time()).replace('.', '_')  # TODO
         for i in results:
             # count += 1
             # print(i)  # 打印出每一个命中的评论
@@ -213,7 +213,7 @@ def cal_lec_info(db_str, de_db):
     # db_course = course["course_info"]
     general = de_db.general
     # lec_general = dict()
-    for collection in collections_names[:1]:  # TODO
+    for collection in collections_names[:5]:  # TODO
         sum_grade = 0.0
         count = 0
         negative_all = 0.0
@@ -228,23 +228,24 @@ def cal_lec_info(db_str, de_db):
         school_name = collection['school_name']
         img_url = collection['img_url']
         lec_url = collection['lec_url']
-        for inner in comment:
-            # count += 1
-            # if count % 10 == 0:
-            #     time.sleep(5)
-            try:
-                positive, negative, sentiment = get_emotion(inner['content'])
-            except:
-                print(inner['content'])
-                positive, negative, sentiment = get_emotion(inner['content'])
-            # count_n += 1
-            if sentiment == 0:  # 負面
-                negative_all += negative
-            if sentiment == 1:  # 中性
-                middle_count += 1
-            if sentiment == 2:  # 積極
-                positive_all += positive
-        emotion = (positive_all - negative_all)/(len(comment)-middle_count)
+        emotion = 0
+        # for inner in comment:
+        #     # count += 1
+        #     # if count % 10 == 0:
+        #     #     time.sleep(5)
+        #     try:
+        #         positive, negative, sentiment = get_emotion(inner['content'])
+        #     except:
+        #         print(inner['content'])
+        #         positive, negative, sentiment = get_emotion(inner['content'])
+        #     # count_n += 1
+        #     if sentiment == 0:  # 負面
+        #         negative_all += negative
+        #     if sentiment == 1:  # 中性
+        #         middle_count += 1
+        #     if sentiment == 2:  # 積極
+        #         positive_all += positive
+        # emotion = (positive_all - negative_all)/(len(comment)-middle_count)
         if db_str == "mooc_db_sr":
             teachers = list(collection['teachers'].keys())
             vip = collection['moc_tag_dtos']
