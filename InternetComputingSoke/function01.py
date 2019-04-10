@@ -1,4 +1,6 @@
 # 增删查改
+import requests
+import json
 import pymongo
 import time
 import os
@@ -9,6 +11,30 @@ from whoosh import sorting
 from whoosh.qparser import MultifieldParser,QueryParser
 from jieba.analyse import ChineseAnalyzer
 analyzer = ChineseAnalyzer()
+
+
+def get_emotion(comment):
+    try:
+        # 整體前移一個tab，shift+tab
+        url = "https://aip.baidubce.com/rpc/2.0/nlp/v1/sentiment_classify?access_token=24.206f41fe147869e8b467fa35a0b19373.2592000.1557464967.282335-14470681"
+        # header = {'Content-Type': 'application/json', 'charset': 'utf-8'}
+        # request_message = json.dumps({"text": "我痛恨写程序"}).encode('gbk')
+        # request_message = json.dumps({"text": comment}).encode('gbk')
+        request_message = json.dumps({"text": comment}).encode('gbk')
+        response_content = requests.post(url, request_message)
+        response_content.encoding = response_content.apparent_encoding
+
+        sentiment_dict = response_content.json()["items"][0]
+        positive_prob = sentiment_dict["positive_prob"]
+        negative_prob = sentiment_dict["negative_prob"]
+        sentiment = sentiment_dict["sentiment"]
+        confidence = sentiment_dict["confidence"]
+        # result_list = list()
+        # result_list.append()
+        print(positive_prob, negative_prob, sentiment, confidence)
+        return positive_prob, negative_prob, sentiment
+    except KeyError:
+        time.sleep(60)
 
 
 # This method is used to connect to a Database.
@@ -132,7 +158,7 @@ def search_index(query, index_dir, db_opt):
         # 一开始这里失败了，是由于txt文件的编码形式不是UTF-8，导致了乱码。
         # results = searcher.search(myquery,limit=None)
         # results = searcher.search_page(myquery, 5) # 得到第五页的内容，还是第六页？，每页多少个来着
-        results = searcher.search(myquery, limit=None, sortedby=[lec_ids, agreeCounts,marks])
+        results = searcher.search(myquery, limit=None, sortedby=[lec_ids, agreeCounts, marks])
         print(len(results))  # 评论命中个数
         # print(type(results)) # <class 'whoosh.searching.Results'>
         # print(results[:])
@@ -154,13 +180,14 @@ def search_index(query, index_dir, db_opt):
         # x = db_opt.aim_comment.delete_many({})
         #
         # print(x.deleted_count, "个文档已删除")
+        aim_comment = str(time.time())  # TODO
         for i in results:
             # count += 1
             # print(i)  # 打印出每一个命中的评论
             # <Hit {'content': '为什么用记事本', 'lec_id': 1004943019, 'mark': 5.0, 'reply': '这个可能是Hbuilder工具出了些小问题'}>
             j = dict(i)
             print(j)
-            aim_comment = str(time.time())  # TODO
+
             db_opt[aim_comment].insert_one(
                 {'lec_id': j['lec_id'],
                  'agreeCount': j['agreeCount'],
@@ -173,22 +200,26 @@ def search_index(query, index_dir, db_opt):
         return_dict[aim_comment] = lec_list
         # print(count)
         print(return_dict)
-        return return_dict
+        return return_dict  # {'1554868362.5810971': [93001, 1001752002, 268001]}
         # context = set_info(seta)
         # return context
 
 
-def cal_lec_info(db_opt, de_db):
-    # db_opt = connect_db()
+def cal_lec_info(db_str, de_db):
+    db_opt = connect_db(db_str)
     collections_names = db_opt.list_collection_names()
     collections_names.remove('system.indexes')
     # course = pymongo.MongoClient("mongodb://super_sr:123456@209.97.166.185:27017/admin")
     # db_course = course["course_info"]
     general = de_db.general
-    lec_general = dict()
-    for collection in collections_names[:5]:  # TODO
-        sum_grade = 0
+    # lec_general = dict()
+    for collection in collections_names[:1]:  # TODO
+        sum_grade = 0.0
         count = 0
+        negative_all = 0.0
+        middle_count = 0
+        positive_all = 0.0
+        # emotion = 0.0
         print(next(db_opt[collection].find()))
         collection = next(db_opt[collection].find())
         comment = collection["comments"]  # collection is a dict, comment is a list
@@ -196,22 +227,116 @@ def cal_lec_info(db_opt, de_db):
         lec_name = collection['lec_name']
         school_name = collection['school_name']
         img_url = collection['img_url']
-        # lec_name = collection['lec_name']
-        for inner in comment:  # inner is a dict
+        lec_url = collection['lec_url']
+        for inner in comment:
+            # count += 1
+            # if count % 10 == 0:
+            #     time.sleep(5)
+            try:
+                positive, negative, sentiment = get_emotion(inner['content'])
+            except:
+                print(inner['content'])
+                positive, negative, sentiment = get_emotion(inner['content'])
+            # count_n += 1
+            if sentiment == 0:  # 負面
+                negative_all += negative
+            if sentiment == 1:  # 中性
+                middle_count += 1
+            if sentiment == 2:  # 積極
+                positive_all += positive
+        emotion = (positive_all - negative_all)/(len(comment)-middle_count)
+        if db_str == "mooc_db_sr":
+            teachers = list(collection['teachers'].keys())
+            vip = collection['moc_tag_dtos']
+            if vip == '国家精品,获得国家精品在线开放课程认定的课程':
+                is_vip = 1  # True
+            else:
+                is_vip = 0
+            for inner in comment:  # inner is a dict
                 mark = inner['mark']
                 sum_grade += mark
                 count += 1
-        average = sum_grade/count
+            average = sum_grade / count
+        elif db_str == "net_db_sr":
+            teachers = collection['teachers']
+            vip = collection['vip']
+            if vip == 'vip_discount':
+                is_vip = 1
+            else:
+                is_vip = 0
+            average = collection['score']
+        count = len(comment)
+
+        # lec_name = collection['lec_name']
+
         # general.insert_one(
         # {'lec_id': lec_id, 'average': average, 'lec_name':lec_name, 'school_name':school_name,
         # 'img_url':img_url, 'flag':0})
         # flag是用来标注命中的课程的。0为初始值，1为命中的课程
         general.insert_one(
-            {'lec_id': lec_id, 'average': average, 'lec_name': lec_name, 'school_name': school_name, 'img_url': img_url,
-             'flag': 0})
+            {'lec_id': lec_id, 'average': average, 'count': count, 'emotion': emotion, 'lec_name': lec_name, 'school_name': school_name,
+             'vip': is_vip, 'img_url': img_url, 'lec_url': lec_url, 'teachers': teachers})
 
-        lec_grade[lec_id] = average
-    return lec_grade
+        # lec_grade[lec_id] = average
+    # return lec_grade
+
+
+def del_col(db_str, col_str):
+    db_opt = connect_db(db_str)
+    db_opt[col_str].drop()
+    print("collection " + col_str + ' was cleared!')
+
+
+def sort_aim_course(lec_id, command_str):
+    # lec_id = list(return_dict.values())
+    db_opt = connect_db('course_info')
+    middle_list = list()
+    final_list = list()
+    general = db_opt['general']
+    document = general.find()
+    for x in document:
+        # print(x)
+        # print(str(x['lec_id']))
+        if x['lec_id'] in lec_id:
+            # print(x)
+            # {'_id': ObjectId('5cad75d029839811089dc36c'), 'lec_id': 1001752002, 'average': 4.656603773584906,
+            # 'count': 265, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'vip': True,
+            # 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100',
+            # 'lec_url': 'https://www.icourse163.org/course/SZU-1001752002', 'teachers': ['王志强', '杜文峰', '杜智华', '周虹', '杨海泉']}
+            middle_list.append(x)
+    if command_str == 'average':
+        final_list = sorted(middle_list, key=lambda each_dict: each_dict["average"], reverse=True)
+    elif command_str == 'count':
+        final_list = sorted(middle_list, key=lambda each_dict: each_dict["count"], reverse=True)
+    # elif command_str == 'count':
+    #     middle_list = sorted(middle_list, key=lambda each_dict: each_dict["count"], reverse=True)
+    elif command_str == 'vipT':
+        for z in middle_list:
+            if z['vip'] == True:  # TODO
+                final_list.append(z)
+    elif command_str == 'vipF':
+        for z in middle_list:
+            if z['vip'] == False:  # TODO
+                final_list.append(z)
+    print("-------------------------------------------")
+    for each in final_list:
+        print(each)
+    # print(middle_list)
+    return final_list
+
+
+def get_aim_course(lec_id):
+    # lec_id = list(return_dict.values())
+    db_opt = connect_db('course_info')
+    middle_list = list()
+    general = db_opt['general']
+    document = general.find()
+    for x in document:
+        # print(x)
+        # print(str(x['lec_id']))
+        if x['lec_id'] in lec_id:
+            middle_list.append(x)
+    return middle_list
 
 
 def set_info(seta):
@@ -223,12 +348,7 @@ def set_info(seta):
         myquery = {"lec_id": lista[i]}
         newvalues = {"$set": {"flag":1}}
         grade.update_one(myquery, newvalues)
-    b = grade.find({"flag":1}).sort("average",-1)
-
-
-
-
-
+    b = grade.find({"flag": 1}).sort("average", -1)
 
     c = list()
     for x in b:
@@ -241,6 +361,8 @@ def set_info(seta):
     # }
     return c
 
+
 def write_db(dict_obj, db_opt):
     posts = db_opt['M' + str(dict_obj["lec_id"])]
     posts.insert(dict_obj)
+
