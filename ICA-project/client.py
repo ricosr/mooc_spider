@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import time
+
 import random
 
 import gevent
@@ -43,7 +43,7 @@ def load_clients():
         CLIENT_DICT[i] = Client()
 
 
-def select_client(utterance):
+def select_client():
     i = random.randint(0, 19)
     while True:
         if i == CLIENT_NUM:
@@ -60,18 +60,3 @@ def select_client(utterance):
 # cli, index = select_client(each)
 # print(cli.get_response(each, index))
 
-
-# if __name__ == '__main__':
-#     import random
-#     load_clients()
-#     # thread_ls = []
-#     utterance1 = ['我超级喜欢周杰伦！', '我昨天去了周杰伦的演唱会', '我昨天去了周杰伦的演唱会，太精彩了，我超级喜欢周杰伦！',
-#                   '绫波丽', '哎呦喂厉害了你', '还学习呢', '碇真嗣', '我吃的饭比你吃的盐都多', '我什么时候撒过慌',
-#                   '我从来不说谎', '笨蛋', '你终于出现了', '新世纪福音战士', '你才是死基佬', '蜡笔小新', '我不看非诚勿扰',
-#                   '我超级喜欢周杰伦！', '我昨天去了周杰伦的演唱会', '我昨天去了周杰伦的演唱会，太精彩了，我超级喜欢周杰伦！',
-#                   '哎呦喂厉害了你', '明日香', '还学习呢', '我吃的饭比你吃的盐都多', '我什么时候撒过慌', '我从来不说谎',
-#                   '笨蛋', '你终于出现了', '新世纪福音战士', '你才是死基佬', '蜡笔小新', '我不看非诚勿扰']
-#     while True:
-#         for each in utterance1:
-#             cli, index = select_client(each)
-#             print(cli.get_response(each, index, random.random()), index)
