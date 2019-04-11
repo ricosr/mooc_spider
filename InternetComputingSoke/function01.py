@@ -228,28 +228,28 @@ def cal_lec_info(db_str, de_db):
         school_name = collection['school_name']
         img_url = collection['img_url']
         lec_url = collection['lec_url']
-        # emotion = 0
-        for inner in comment:
-            # count += 1
-            # if count % 10 == 0:
-            #     time.sleep(5)
-            try:
-                positive, negative, sentiment = get_emotion(inner['content'])
-            except:
-                print(inner['content'])
-                positive, negative, sentiment = get_emotion(inner['content'])
-            # count_n += 1
-            if sentiment == 0:  # 負面
-                negative_all += negative
-            if sentiment == 1:  # 中性
-                middle_count += 1
-            if sentiment == 2:  # 積極
-                positive_all += positive
-        emotion = (positive_all - negative_all)/(len(comment)-middle_count)
+        emotion = 0
+        # for inner in comment:
+        #     # count += 1
+        #     # if count % 10 == 0:
+        #     #     time.sleep(5)
+        #     try:
+        #         positive, negative, sentiment = get_emotion(inner['content'])
+        #     except:
+        #         print(inner['content'])
+        #         positive, negative, sentiment = get_emotion(inner['content'])
+        #     # count_n += 1
+        #     if sentiment == 0:  # 負面
+        #         negative_all += negative
+        #     if sentiment == 1:  # 中性
+        #         middle_count += 1
+        #     if sentiment == 2:  # 積極
+        #         positive_all += positive
+        # emotion = (positive_all - negative_all)/(len(comment)-middle_count)
         if db_str == "mooc_db_sr":
             teachers = list(collection['teachers'].keys())
             vip = collection['moc_tag_dtos']
-            if vip == '国家精品,获得国家精品在线开放课程认定的课程':
+            if vip:
                 is_vip = 1  # True
             else:
                 is_vip = 0
@@ -257,7 +257,10 @@ def cal_lec_info(db_str, de_db):
                 mark = inner['mark']
                 sum_grade += mark
                 count += 1
-            average = sum_grade / count
+            if count != 0:
+                average = sum_grade / count
+            else:
+                average = 0
         elif db_str == "net_db_sr":
             teachers = collection['teachers']
             vip = collection['vip']
