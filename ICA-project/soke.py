@@ -1,4 +1,5 @@
 #encoding:utf-8
+import time
 from flask import Flask,jsonify,render_template,request,redirect,url_for,session
 from flask_pymongo import PyMongo
 import pymongo
@@ -14,6 +15,10 @@ from client import load_clients, select_client
 
 
 DB_OPT = None
+DB_COMMON_OPT = None
+RESPONSE_DICT = {}
+CON_DICT = {}
+RESPONSE_LS = None
 
 app=Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -42,7 +47,6 @@ def connect_db(db_str):
 def get_aim_course(lec_id):
     # lec_id = list(return_dict.values())
     global DB_OPT
-    print(DB_OPT)
     db_opt = DB_OPT
     middle_list = list()
     general = db_opt['general']
@@ -55,6 +59,21 @@ def get_aim_course(lec_id):
     return middle_list
 
 
+def search_comment(query):
+    cli, index = select_client()
+    response_json = cli.get_response(query, index)
+    response_mark = str(time.time()).replace('.', '_')
+    global RESPONSE_DICT
+    RESPONSE_DICT[response_mark] = json.loads(response_json)
+    b = []
+    for each_lec in RESPONSE_DICT[response_mark]:
+        b.append(each_lec['lec_id'])
+    lec_list = list(set(b))
+    global CON_DICT
+    CON_DICT[response_mark] = get_aim_course(lec_list)
+    return response_mark
+
+
 @app.route('/',methods=['GET','POST'])
 def index():
 
@@ -62,11 +81,26 @@ def index():
         return render_template('index.html')
     else:
         query = request.form.get('query')               #从表单中获取用户的输入
+        if not query.strip():
+            return render_template('index.html')
         cli, index = select_client()
         response_json = cli.get_response(query, index)
-        response_dict = json.loads(response_json)
 
-        global con
+        response_mark = str(time.time()).replace('.', '_')
+
+        # global RESPONSE_LS
+        # RESPONSE_LS = json.loads(response_json)
+        global RESPONSE_DICT
+        RESPONSE_DICT[response_mark] = json.loads(response_json)
+        # print('receive.........................')
+        # print(RESPONSE_LS)
+        # print('receive end.........................')
+        b = []
+        for each_lec in RESPONSE_DICT[response_mark]:
+            b.append(each_lec['lec_id'])
+        lec_list = list(set(b))
+        # print("idididididididid.....................................")
+        # global con
         global l
         # print(query)
         # seta = search_index(query)
@@ -115,13 +149,19 @@ def index():
         # print(type(l))
 
         # print(l)
-        l = list(response_dict.keys())[0]
+        # l = list(response_dict.keys())[0]
+        # if l:
+        #     print("get Txxxxxxxxxxx number")
         # print(list(response_dict.values())[0])
-        con = get_aim_course(list(response_dict.values())[0])
+        global CON_DICT
+        CON_DICT[response_mark] = get_aim_course(lec_list)
+        # if con:
+        #     print("get lecture short info")
+
         # print(l)
         # print(con)
 
-        return render_template('search.html', con=con,l=l)
+        return render_template('search.html', con=CON_DICT[response_mark], response_mark=response_mark)
         # else:
         #     return '无相关搜索结果'
 
@@ -149,7 +189,7 @@ def login():
         return render_template('login.html')
     else:
         telephone = request.form.get('telephone')
-        print(telephone)
+        # print(telephone)
         password = request.form.get('password')
         result = user.find_one({'telephone': telephone,'password':password})
         #print(result)
@@ -222,65 +262,105 @@ def question():
         return redirect(url_for('index'))
 
 
-@app.route('/searchall/',methods=['get', 'post'])
-def searchall():
+@app.route('/searchall/<response_mark>',methods=['get', 'post'])
+def searchall(response_mark):
+    if request.method == 'POST':
+        query = request.form.get('query')
+        if query:
+            response_mark = search_comment(query)
+            return render_template('search.html', con=CON_DICT[response_mark], response_mark=response_mark)
+    global CON_DICT
     # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
-    global con
-    return render_template('searchall.html',con=con)
+    # global con
+    return render_template('searchall.html',con=CON_DICT[response_mark], response_mark=response_mark)
 
-@app.route('/searchscore/',methods=['get', 'post'])
-def searchscore():
+@app.route('/searchscore/<response_mark>',methods=['get', 'post'])
+def searchscore(response_mark):
+    if request.method == 'POST':
+        query = request.form.get('query')
+        if query:
+            response_mark = search_comment(query)
+            return render_template('search.html', con=CON_DICT[response_mark], response_mark=response_mark)
+    global CON_DICT
     # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
-    global con
-    return render_template('searchscore.html',con=con)
+    # global con
+    return render_template('searchscore.html',con=CON_DICT[response_mark], response_mark=response_mark)
 
 
-@app.route('/searchsense/',methods=['get', 'post'])
-def searchsense():
+@app.route('/searchsense/<response_mark>',methods=['get', 'post'])
+def searchsense(response_mark):
+    if request.method == 'POST':
+        query = request.form.get('query')
+        if query:
+            response_mark = search_comment(query)
+            return render_template('search.html', con=CON_DICT[response_mark], response_mark=response_mark)
+    global CON_DICT
     # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
-    global con
-    return render_template('searchsense.html',con=con)
+    # global con
+    return render_template('searchsense.html',con=CON_DICT[response_mark], response_mark=response_mark)
 
-@app.route('/searchcomment/',methods=['get', 'post'])
-def searchcomment():
+@app.route('/searchcomment/<response_mark>',methods=['get', 'post'])
+def searchcomment(response_mark):
+    if request.method == 'POST':
+        query = request.form.get('query')
+        if query:
+            response_mark = search_comment(query)
+            return render_template('search.html', con=CON_DICT[response_mark], response_mark=response_mark)
+    global CON_DICT
     # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
-    global con
-    return render_template('searchcomment.html',con=con)
+    # global con
+    return render_template('searchcomment.html',con=CON_DICT[response_mark], response_mark=response_mark)
 
-@app.route('/searchvipyes/',methods=['get', 'post'])
-def searchvipyes():
+@app.route('/searchvipyes/<response_mark>',methods=['get', 'post'])
+def searchvipyes(response_mark):
+    if request.method == 'POST':
+        query = request.form.get('query')
+        if query:
+            response_mark = search_comment(query)
+            return render_template('search.html', con=CON_DICT[response_mark], response_mark=response_mark)
+    global CON_DICT
     # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
-    global con
+    # global con
     # print(con)
     conyes=[]
-    for i in con:
+    for i in CON_DICT[response_mark]:
         if i["vip"]==1:
             # print(i)
             conyes.append(i)
         else:
             continue
     # print(conyes)
-    return render_template('searchvipyes.html',conyes=conyes)
+    return render_template('searchvipyes.html',conyes=conyes, response_mark=response_mark)
 
-@app.route('/searchvipno/',methods=['get', 'post'])
-def searchvipno():
+@app.route('/searchvipno/<response_mark>',methods=['get', 'post'])
+def searchvipno(response_mark):
+    if request.method == 'POST':
+        query = request.form.get('query')
+        if query:
+            response_mark = search_comment(query)
+            return render_template('search.html', con=CON_DICT[response_mark], response_mark=response_mark)
+    global CON_DICT
     # con=[{'_id': ObjectId('5c9e29b62983981fdc1cebc7'), 'lec_id': 93001, 'average': 4.887005649717514, 'lec_name': '数据结构', 'school_name': '浙江大学', 'img_url': 'http://edu-image.nosdn.127.net/C4C10C0C27254ED77925331F19F83FED.jpg?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebc8'), 'lec_id': 268001, 'average': 4.853004548719176, 'lec_name': 'Python语言程序设计', 'school_name': '北京理工大学', 'img_url': 'http://edu-image.nosdn.127.net/5B8826377EE623C7B6328E8F8B8D2871.png?imageView&thumbnail=510y288&quality=100', 'flag': 1}, {'_id': ObjectId('5c9e29ba2983981fdc1cebca'), 'lec_id': 1001752002, 'average': 4.656603773584906, 'lec_name': '多媒体技术及应用', 'school_name': '深圳大学', 'img_url': 'http://edu-image.nosdn.127.net/DE9AC030A30A85E0CBF85A84280EF747.jpg?imageView&thumbnail=426y240&quality=100', 'flag': 1}]
-    global con
     # print(con)
     conno = []
-    for i in con:
+    for i in CON_DICT[response_mark]:
         if i["vip"] == 0:
             # print(i)
             conno.append(i)
         else:
             continue
     # print(conno)
-    return render_template('searchvipno.html', conno=conno)
+    return render_template('searchvipno.html', conno=conno, response_mark=response_mark)
 
 
 
-@app.route('/comment/<lec_id>',methods=['get', 'post'])
-def comment(lec_id):
+@app.route('/comment/<lec_id>/<response_mark>',methods=['get', 'post'])
+def comment(lec_id, response_mark):
+    if request.method == 'POST':
+        query = request.form.get('query')
+        if query:
+            response_mark = search_comment(query)
+            return render_template('search.html', con=CON_DICT[response_mark], response_mark=response_mark)
     # print(lec_id)
     # lec={'lec_id':1,
     #      'agreeCount':50,#赞同数
@@ -291,19 +371,31 @@ def comment(lec_id):
     # lecture = mongo.db.lectures
     # lec_id=268001
     # print(lec_id)
-    global l
+    # global l
     # print(l)
-    client = pymongo.MongoClient("mongodb://super_sr:comppolyuhk@209.97.166.185:27017/admin")
-    db = client["temporary_comment"]
-    lecture = db[l]
+    # client = pymongo.MongoClient("mongodb://super_sr:comppolyuhk@209.97.166.185:27017/admin")
+    # db = client["temporary_comment"]
+    # global DB_COMMON_OPT
+    # lecture = DB_COMMON_OPT[l]
     # g=lecture.find({'lec_id': lec_id})
     # g = lecture.find()
     # for k in g:
     #     print(k)
-    find_results = lecture.find({'lec_id': int(lec_id)})
+    # print("start get comments")
+    response_ls = RESPONSE_DICT[response_mark]
+    # print("rrrrrrrrrrrrrrrrrrrrrrrrrrr", RESPONSE_LS)
+    find_results = []
+    for each_lec in response_ls:
+        # print("iiiiiiiiiiiiiiiiiiiiiiiii", lec_id)
+        if str(each_lec["lec_id"]) == str(lec_id):
+            find_results.append(each_lec)
+    # print(find_results)
+    # find_results = lecture.find({'lec_id': int(lec_id)})
+    # if find_results:
+    # print("end get comments!!!")
     context = {
-        'lectures': find_results.sort("agreeCount", -1),
-        'size':  find_results.count()
+        'lectures': sorted(find_results, key=lambda result: result['agreeCount'], reverse=True)  ,# find_results.sort("agreeCount", -1),
+        'size':  len(find_results)
     }
 
     return render_template('comment.html',**context)
@@ -333,4 +425,8 @@ def my_context_processor():
 if __name__ == '__main__':
     load_clients()
     DB_OPT = connect_db("course_info")
-    app.run(debug=  True)
+    DB_COMMON_OPT = connect_db("temporary_comment")
+    app.run(
+        host='0.0.0.0',
+        port=80
+    )

@@ -28,16 +28,16 @@
     <div class="recommend w">
           <div class="rec-l">
                <strong>搜索排名（由高到低）</strong>|
-               <a href="{{ url_for('searchall') }} ">课程名</a> |
-               <a href="{{ url_for('searchscore') }}">课程评分</a> |
-               <a href="{{ url_for('searchsense') }}">情感</a> |
-               <a href="{{ url_for('searchcomment') }}">评论数</a> |
+               <a href="{{ url_for('searchall', response_mark=response_mark) }} ">课程名</a> |
+               <a href="{{ url_for('searchscore', response_mark=response_mark) }}">课程评分</a> |
+               <a href="{{ url_for('searchsense', response_mark=response_mark) }}">情感</a> |
+               <a href="{{ url_for('searchcomment', response_mark=response_mark) }}">评论数</a> |
                是否是国家精品课
 
                <select name="vipselect" class="topsele" onchange="mbar(this)">
                             <option value=" ">请选择</option>
-                            <option value="{{ url_for('searchvipyes') }}">是</option>
-                            <option value="{{ url_for('searchvipno') }}">否</option>
+                            <option value="{{ url_for('searchvipyes', response_mark=response_mark) }}">是</option>
+                            <option value="{{ url_for('searchvipno', response_mark=response_mark) }}">否</option>
               </select>
 
 
@@ -87,7 +87,7 @@
 
                     </p>
                     <p>
-				 		<a class="btn" href="{{url_for('comment',lec_id=i.lec_id) }}">View details »</a>
+				 		<a class="btn" href="{{url_for('comment',lec_id=i.lec_id, response_mark=response_mark)}}">View details »</a>
 
                     </p>
 				</div>

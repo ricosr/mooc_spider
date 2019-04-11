@@ -31,7 +31,7 @@ def get_emotion(comment):
         confidence = sentiment_dict["confidence"]
         # result_list = list()
         # result_list.append()
-        print(positive_prob, negative_prob, sentiment, confidence)
+        # print(positive_prob, negative_prob, sentiment, confidence)
         return positive_prob, negative_prob, sentiment
     except KeyError:
         time.sleep(60)
@@ -54,9 +54,9 @@ def read_db(db_str):
     collections_names = db_opt.list_collection_names()
     collections_names.remove('system.indexes')
     # for collection in collections_names[:5]: this aims to test 5 collections in order to save time
-    start = time.perf_counter()
-    for collection in collections_names[:]:  # TODO
-        print(next(db_opt[collection].find()))  # 1.4308634230000001
+    # start = time.perf_counter()
+    # for collection in collections_names[:]:  # TODO
+    #     print(next(db_opt[collection].find()))  # 1.4308634230000001
         # for x in db_opt[collection].find(): # 2.83240298
         #     print(x)
         #     print("1") # use to separate
@@ -70,8 +70,8 @@ def read_db(db_str):
         # 那么假如先读取数据再来建索引的话，得到的返回值有会占用大量的内存
         # 因此，还是读一条建一个索引的方式，只不过这样拆分函数，read db改成get col name，建索引中再来连一次数据库？还是不对，算了直接建索引吧
         # 这个函数用来测试一下遍历数据库数据方法的速度吧。next() function is faster. 其实最好本地来测速；不然有网络速度干扰。
-    end = time.perf_counter()
-    print(end - start)
+    # end = time.perf_counter()
+    # print(end - start)
 
 
 def refresh_index_file(index_dir):
@@ -116,7 +116,7 @@ def build_index(db_str, index_dir):
     collections_names = db_opt.list_collection_names()
     collections_names.remove('system.indexes')
     for collection in collections_names[:]:  # TODO
-        print(next(db_opt[collection].find()))
+        # print(next(db_opt[collection].find()))
         col = next(db_opt[collection].find())
         comment = col["comments"]  # collection:col is a dict, comment is a list
         # for inner in range(len(comment)):#TypeError: 'int' object is not subscriptable
@@ -158,8 +158,11 @@ def search_index(query, ix, db_opt):
         # 一开始这里失败了，是由于txt文件的编码形式不是UTF-8，导致了乱码。
         # results = searcher.search(myquery,limit=None)
         # results = searcher.search_page(myquery, 5) # 得到第五页的内容，还是第六页？，每页多少个来着
+        # print("start search....................")
         results = searcher.search(myquery, limit=None, sortedby=[lec_ids, agreeCounts, marks])
-        print(len(results))  # 评论命中个数
+        # if requests:
+        #     print("end search...........................")
+        # print(len(results))  # 评论命中个数
         # print(type(results)) # <class 'whoosh.searching.Results'>
         # print(results[:])
         # for i in range(len(results)):
@@ -181,26 +184,36 @@ def search_index(query, ix, db_opt):
         #
         # print(x.deleted_count, "个文档已删除")
         aim_comment = 'T' + str(time.time()).replace('.', '_')  # TODO
+        # print("start write Txxxxxxxxxxxxxxx")
+        search_result_ls = []
         for i in results:
             # count += 1
             # print(i)  # 打印出每一个命中的评论
             # <Hit {'content': '为什么用记事本', 'lec_id': 1004943019, 'mark': 5.0, 'reply': '这个可能是Hbuilder工具出了些小问题'}>
             j = dict(i)
-            print(j)
-
-            db_opt[aim_comment].insert_one(
-                {'lec_id': j['lec_id'],
+            # print(j)
+            search_result_ls.append({'lec_id': j['lec_id'],
                  'agreeCount': j['agreeCount'],
                  'mark': j['mark'],
                  'content': j['content'],
-                 'reply': j['reply']}
-            )
-            b.append(j['lec_id'])
-        lec_list = list(set(b))
-        return_dict[aim_comment] = lec_list
+                 'reply': j['reply']})
+
+            # db_opt[aim_comment].insert_one(
+            #     {'lec_id': j['lec_id'],
+            #      'agreeCount': j['agreeCount'],
+            #      'mark': j['mark'],
+            #      'content': j['content'],
+            # #      'reply': j['reply']}
+            # )
+            # b.append(j['lec_id'])
+        # print("end write Txxxxxxxxxxxxxxxxxxxxxxxxx")
+        # lec_list = list(set(b))
+        # return_dict[aim_comment] = lec_list
         # print(count)
-        print(return_dict)
-        return json.dumps(return_dict)  # {'1554868362.5810971': [93001, 1001752002, 268001]}
+        # print(return_dict)
+        # print("return {'Txxxxxxxxxxxxxxxxxxxxx':[1234,1234,1234]}")
+        return json.dumps(search_result_ls)
+        # return json.dumps(return_dict)  # {'1554868362.5810971': [93001, 1001752002, 268001]}
         # context = set_info(seta)
         # return context
 
