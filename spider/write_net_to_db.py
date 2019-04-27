@@ -6,7 +6,7 @@ from parse_net_comments import combine_lec_comment, COMMENT_PICKLE, LECTURE_DATA
 
 
 def connect_db():
-    client = pymongo.MongoClient("mongodb://xxx:xxxxxx@209.97.xxx.xxx:27017/admin")
+    client = pymongo.MongoClient("mongodb://super_sr:comppolyuhk@209.97.166.185:27017/admin")
     db_opt = client["net_db_sr"]
     return db_opt
 

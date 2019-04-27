@@ -42,7 +42,7 @@ def get_lec_ids(lec_type_no):
     count = 1
     while True:
         data = {
-            "categoryId": "{}".format(lec_type_no),    # "1001043131",
+            "categoryId": "{}".format(lec_type_no),
             "type": "30",
             "orderBy": "0",
             "pageIndex": "{}".format(count),
